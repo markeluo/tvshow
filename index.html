@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="main">
-        <div class="pageitem">
+        <div class="pageitem actived">
             <table class="pagecontent1">
                 <tr class="row">
                     <td class="bg_green font_x2">目标</td>
@@ -64,16 +64,20 @@
                 </tr>
             </table>
         </div>
-        <div class="pageitem actived">
+        <div class="pageitem">
             <div class="pagecontent5">
                 <div id="FTT_Day"></div>
             </div>
         </div>
         <div class="pageitem">
-            6.每周FTT趋势图
+            <div class="pagecontent6">
+                <div id="FTT_Week"></div>
+            </div>
         </div>
         <div class="pageitem">
-            7.每月FTT趋势图
+            <div class="pagecontent7">
+                <div id="FTT_Month"></div>
+            </div>
         </div>
     </div>
 </body>
@@ -81,66 +85,5 @@
 <script type="text/javascript" src="lib/jquery-2.0.0.min.js"></script>
 <script type="text/javascript" src="lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="lib/highcharts/highcharts.js"></script>
-<script type="text/javascript">
-$(document.body).ready(function(){
-    initFTT_Chart();
-});
-function initFTT_Chart(){
-    var FTT_data=[
-        {NM:"03/23##周1",FTT_RT:"78",TYP:"DAY"},
-        {NM:"03/24##周2",FTT_RT:"80",TYP:"DAY"},
-        {NM:"03/25##周3",FTT_RT:"75",TYP:"DAY"},
-        {NM:"03/26##周4",FTT_RT:"82",TYP:"DAY"},
-        {NM:"03/27##周5",FTT_RT:"80",TYP:"DAY"},
-        {NM:"03/28##周6",FTT_RT:"75",TYP:"DAY"}
-    ];
-
-    var d_title="每日FTT趋势图";
-    var d_data=filterDayFTT(FTT_data);
-    Highcharts.chart('FTT_Day', {
-        chart: {
-            type: 'line'
-        },
-        title: {
-            text:d_title
-        },
-        xAxis: {
-            categories:d_data.x
-        },
-        yAxis:{
-            title:{
-                text: "FTT"
-            },
-            labels:{
-                
-            }
-        },
-        plotOptions:{
-            line:{
-                dataLabels:{
-                    enabled:true,
-                    format:"{y}%"
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: '',
-            data:d_data.y
-        }]
-    });
-}
-
-function filterDayFTT(_data){
-    var tdata={x:[],y:[]};
-    for(var i=0;i<_data.length;i++){
-        if(_data[i].TYP=="DAY"){
-            tdata.x.push(_data[i].NM.split("##")[1].replace("周1","周一").replace("周2","周二").replace("周3","周三").replace("周4","周四").replace("周5","周五").replace("周6","周六").replace("周0","周日"));
-            tdata.y.push(parseInt(_data[i].FTT_RT));
-        }
-    }
-    return tdata;
-}
-</script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/dal.js"></script>
