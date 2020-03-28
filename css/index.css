@@ -1,0 +1,125 @@
+html,body{
+    margin:0px;
+    padding:0px;
+    width: 100%;
+    height:100%;
+    overflow: hidden;
+}
+html,body,div,span,label,a,h1,h2,h3,h4,h5,h6,tr,td{
+    font-family:'微软雅黑','黑体','宋体';
+    color:#222222;
+}
+.font_x1{
+    font-size: 20em;
+    font-weight: bold;
+}
+.font_x2{
+    font-size: 16em;
+    font-weight: bold;
+}
+.font_x3{
+    font-size: 10em;
+    font-weight: bold;
+}
+.font_x4{
+    font-size: 5em;
+    font-weight: bold;
+}
+.font_x5{
+    font-size: 3em;
+    font-weight: bold;
+}
+
+div.main{
+    height:100%;
+    width:100%;
+}
+.pageitem{
+    width: 100%;
+    height:100%;
+    display: none;
+}
+.pageitem.actived{
+    display: block;
+}
+/*common-----------------------start*/
+.bg_green{
+    background-color: #20b879;
+    color: #FFFFFF;
+}
+.bg_red{
+    background-color: #e53333;
+    color: #FFFFFF;
+}
+.font_green{
+    color: #20b879;
+    background-color: #FFFFFF;
+}
+.font_red{
+    color: #e53333;
+    background-color: #FFFFFF;
+}
+/*common-----------------------end*/
+
+/*Page1----start*/
+.pagecontent1{
+    width:100%;
+    height:100%;
+}
+table.pagecontent1 tr td{
+    padding:20px;
+    text-align: center;
+    border:solid 1px #dcdcdc;
+}
+/*Page 2---------start*/
+.pagecontent2{
+    width:100%;
+    height:100%;
+}
+.pagecontent2 tr td{
+    text-align: center;
+}
+.pagecontent2 tr td.left{
+    width: 35%;
+    text-align: right;
+}
+.pagecontent2 tr td.right{
+    width: 65%;
+    text-align:left;
+    position: relative;
+    padding: 50px 100px;
+}
+.pagecontent2 tr td.right img{
+    height:100%;
+}
+/*Page 3---------Start*/
+.pagecontent3{
+    width:100%;
+    height:100%;
+}
+table.pagecontent3 tr td{
+    padding:20px;
+    text-align: center;
+    border:solid 1px #dcdcdc;
+}
+/*Page 4---------Start*/
+.pagecontent4{
+    width:100%;
+    height:100%;
+}
+table.pagecontent4 tr td{
+    padding:20px;
+    text-align: center;
+    border:solid 1px #dcdcdc;
+}
+/*Page 5------------Start*/
+.pagecontent5{
+    width:100%;
+    height:100%;
+    padding:5% 10%;
+}
+.pagecontent5>div{
+    width:100%;
+    height:100%;
+    background-color: red;
+}
