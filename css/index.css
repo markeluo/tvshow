@@ -96,6 +96,12 @@ table.pagecontent1 tr td{
 .pagecontent2 tr td.right img{
     height:100%;
 }
+.styleimg>span{
+    position: absolute;
+    color: red;
+    font-size:2em;
+}
+
 /*Page 3---------Start*/
 .pagecontent3{
     width:100%;

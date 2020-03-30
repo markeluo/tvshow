@@ -5,7 +5,7 @@ $(document.body).ready(function(){
 
     setInterval(pageSwitch,5000);
     reloadData();
-    setInterval(reloadData,30000);
+    //setInterval(reloadData,30000);
 });
 
 function getQueryObject(url) {
@@ -49,6 +49,8 @@ function pageSwitch(){
 }
 
 //region  2.数据处理--start
+var cp_mb=6;//次品率
+var ftt_mb=90;//FTT目标
 function reloadData(){
     refreshtarget();
     refreshStyleMarkers();
@@ -61,7 +63,10 @@ function reloadData(){
 function refreshtarget(){
     DAL.GetTarget(LineCode,function(rlt){
         if(rlt && rlt.code==200){
-
+            if(rlt.data.TargetQty){
+                $("#MB_Qty").html(rlt.data.TargetQty);
+           }
+           $("#DWC_Qty").html(rlt.data.PassQty);
         }
     });
 }
@@ -69,26 +74,58 @@ function refreshtarget(){
 //2.2.刷新款式故障图
 function refreshStyleMarkers(){
     DAL.GetStyleMarkers(LineCode,function(rlt){
-        if(rlt && rlt.code==200){
-                    
+        if(rlt && rlt.code==200 && rlt.data.length>0){
+            var styleinf=rlt.data[0];
+ 
+            $("#GZT_BZ").html(styleinf.FactoryName+"-"+styleinf.LineName);
+            $("#GZT_KH").html(styleinf.StyleNo);
+            $("#GZT_TP>img").attr("src","images/"+styleinf.ImgName);
+
+            var imgpars={
+                left:($("#GZT_TP>img").offset().left-$("#GZT_TP").offset().left),
+                top:($("#GZT_TP>img").offset().top-$("#GZT_TP").offset().top),
+                width:$("#GZT_TP>img").width(),
+                height:$("#GZT_TP>img").height()
+            }
+
+            $("#GZT_TP>span").remove();
+            for(var i=0;i<rlt.data.length;i++){
+                $("#GZT_TP").append(_styleMarkerFormat(rlt.data[i].PositionX,rlt.data[i].PositionY,imgpars));
+            }
         }
     });
+}
+function _styleMarkerFormat(_x,_y,_par){
+    var _left=parseInt(_par.width*_x)+_par.left-14;
+    var _top=parseInt(_par.width*_y)+_par.top-14;
+    var markerhtml="<span class='glyphicon glyphicon-map-marker' style='left:"+_left+"px;top:"+_top+"px;'></span>";
+    return markerhtml;
 }
 
 //2.3.刷新当前FTT
 function refreshFTTRate(){
+    $("#FTT_MB").html(ftt_mb+"%");
     DAL.GetFTTRate(LineCode,function(rlt){
         if(rlt && rlt.code==200){
-                    
+          if(rlt.data.FTTQty && rlt.data.FTTQty>=ftt_mb){
+                $("#FTT_SJ").removeClass("font_red").addClass("font_green").html(rlt.data.FTTQty+"%");
+           }else{
+               $("#FTT_SJ").removeClass("font_green").addClass("font_red").html(rlt.data.FTTQty+"%");
+           }     
         }
     });
 }
 
 //2.4.刷新次品率
 function refreshDefRate(){
+    $("#CPL_MB").html(cp_mb+"%");
     DAL.GetDefRate(LineCode,function(rlt){
         if(rlt && rlt.code==200){
-                    
+            if(rlt.data.DefRate && rlt.data.DefRate>cp_mb){
+                $("#CPL_SJ").removeClass("font_green").addClass("font_red").html(rlt.data.DefRate+"%");
+            }else{
+                $("#CPL_SJ").removeClass("font_red").addClass("font_green").html(rlt.data.DefRate+"%");
+            }      
         }
     });
 }
