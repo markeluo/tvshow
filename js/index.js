@@ -2,10 +2,8 @@ var LineCode="";
 $(document.body).ready(function(){
     var urlparas=getQueryObject();
     LineCode=urlparas.linecode;//解析产线代码
-
-    setInterval(pageSwitch,5000);
     reloadData();
-    setInterval(reloadData,5000);
+    setInterval(pageSwitch,5000);
 });
 
 function getQueryObject(url) {
@@ -32,24 +30,31 @@ function pageSwitch(){
         _index=0;
     }
  
-    $($("div.pageitem").eq(tindex)).animate({
-        "left":'-1920px',
-        opacity:0.5
-    },500,function(ev){
-        $(this).removeClass("actived");
-    });
+    ////动画效果
+    // $($("div.pageitem").eq(tindex)).animate({
+    //     "left":'-1920px',
+    //     opacity:0.5
+    // },500,function(ev){
+    //     $(this).removeClass("actived");
+    // });
 
-    $($("div.pageitem").eq(_index)).css({
-        "left":'1920px',
-        opacity:0.5
-    }).addClass("actived").animate({
-        "left":'0px',
-        opacity:1
-    },function(){
-        if(_index==1){
-            _fefreshMarker();
-        }
-    });
+    // $($("div.pageitem").eq(_index)).css({
+    //     "left":'1920px',
+    //     opacity:0.5
+    // }).addClass("actived").animate({
+    //     "left":'0px',
+    //     opacity:1
+    // },function(){
+    //     if(_index==1){
+    //         _refreshMarker();
+    //     }
+    // });
+
+    //无动画处理
+    $("div.pageitem").eq(tindex).removeClass("actived");
+    $("div.pageitem").eq(_index).addClass("actived");
+    if(_index==1){_refreshMarker();}
+    if(_index==(total-1)){reloadData();}
 }
 
 //region  2.数据处理--start
@@ -99,11 +104,11 @@ function refreshStyleMarkers(){
                     width:styleimg_pars.width+"px"
                 });
             }
-            _fefreshMarker();
+            //_refreshMarker();
         }
     });
 }
-function _fefreshMarker(){
+function _refreshMarker(){
     var tmpdata=styleimg_pars.markerdata;
     if(tmpdata && tmpdata.length>0){
         var imgpars={
@@ -120,8 +125,8 @@ function _fefreshMarker(){
     }
 }
 function _styleMarkerFormat(_x,_y,_par){
-    var _left=parseInt(_par.width*_x)+_par.left-14;
-    var _top=parseInt(_par.width*_y)+_par.top-14;
+    var _left=parseInt(_par.width*_x)+_par.left;
+    var _top=parseInt(_par.width*_y)+_par.top;
     var markerhtml="<span class='glyphicon glyphicon-map-marker' style='left:"+_left+"px;top:"+_top+"px;'></span>";
     return markerhtml;
 }
