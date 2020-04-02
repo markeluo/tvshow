@@ -3,7 +3,7 @@
 */
 (function(window){
     var u={
-        serverpth:'http://172.18.80.199:5000/api/mes/'
+        serverpth:'http://172.18.8.1:5000/api/mes/'
     }
     u._get=function(url,para,callfun){
         $.getJSON(u.serverpth+url,function(data,status){

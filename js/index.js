@@ -5,7 +5,7 @@ $(document.body).ready(function(){
 
     setInterval(pageSwitch,5000);
     reloadData();
-    //setInterval(reloadData,30000);
+    setInterval(reloadData,5000);
 });
 
 function getQueryObject(url) {
@@ -45,6 +45,10 @@ function pageSwitch(){
     }).addClass("actived").animate({
         "left":'0px',
         opacity:1
+    },function(){
+        if(_index==1){
+            _fefreshMarker();
+        }
     });
 }
 
@@ -66,34 +70,54 @@ function refreshtarget(){
             if(rlt.data.TargetQty){
                 $("#MB_Qty").html(rlt.data.TargetQty);
            }
-           $("#DWC_Qty").html(rlt.data.PassQty);
+           $("#DWC_Qty").html(rlt.data.TargetQty-rlt.data.PassQty);
         }
     });
 }
 
 //2.2.刷新款式故障图
+var styleimg_pars={
+    width:1150,
+    height:750,
+    markerdata:[]
+}
 function refreshStyleMarkers(){
     DAL.GetStyleMarkers(LineCode,function(rlt){
         if(rlt && rlt.code==200 && rlt.data.length>0){
             var styleinf=rlt.data[0];
- 
+            styleimg_pars.markerdata=rlt.data;
+
             $("#GZT_BZ").html(styleinf.FactoryName+"-"+styleinf.LineName);
             $("#GZT_KH").html(styleinf.StyleNo);
-            $("#GZT_TP>img").attr("src","images/"+styleinf.ImgName);
-
-            var imgpars={
-                left:($("#GZT_TP>img").offset().left-$("#GZT_TP").offset().left),
-                top:($("#GZT_TP>img").offset().top-$("#GZT_TP").offset().top),
-                width:$("#GZT_TP>img").width(),
-                height:$("#GZT_TP>img").height()
+            $("#GZT_TP>img").attr("src","images/"+styleinf.ImgName).css({
+                height:styleimg_pars.height+"px",
+                width:"auto"
+            });
+            if($("#GZT_TP>img").width()>styleimg_pars.width){
+                $("#GZT_TP>img").css({
+                    height:"auto",
+                    width:styleimg_pars.width+"px"
+                });
             }
-
-            $("#GZT_TP>span").remove();
-            for(var i=0;i<rlt.data.length;i++){
-                $("#GZT_TP").append(_styleMarkerFormat(rlt.data[i].PositionX,rlt.data[i].PositionY,imgpars));
-            }
+            _fefreshMarker();
         }
     });
+}
+function _fefreshMarker(){
+    var tmpdata=styleimg_pars.markerdata;
+    if(tmpdata && tmpdata.length>0){
+        var imgpars={
+            left:($("#GZT_TP>img").offset().left-$("#GZT_TP").offset().left),
+            top:($("#GZT_TP>img").offset().top-$("#GZT_TP").offset().top),
+            width:$("#GZT_TP>img").width(),
+            height:$("#GZT_TP>img").height()
+        }
+    
+        $("#GZT_TP>span").remove();
+        for(var i=0;i<tmpdata.length;i++){
+            $("#GZT_TP").append(_styleMarkerFormat(tmpdata[i].PositionX,tmpdata[i].PositionY,imgpars));
+        }
+    }
 }
 function _styleMarkerFormat(_x,_y,_par){
     var _left=parseInt(_par.width*_x)+_par.left-14;
