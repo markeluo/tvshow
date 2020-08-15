@@ -1,6 +1,16 @@
 
 $(function () {
 
+    var stylepage={
+        page:1,
+        totalpage:0,
+        pageSize:8
+    }
+    if(stylelive.data.length%stylepage.pageSize==0){
+        stylepage.totalpage=stylelive.data.length/stylepage.pageSize;
+    }else{
+        stylepage.totalpage=parseInt(stylelive.data.length/stylepage.pageSize)+1;
+    } 
     echarts_1();
     echarts_2();
     InitStyles();
@@ -13,10 +23,10 @@ $(function () {
         var myChart = echarts.init(document.getElementById('echarts_1'));
 
         var data = [
-            {value: 70,name: '一车间'},
-            {value: 13,name: '一厂'},
-            {value: 12,name: '二厂'},
-            {value: 52,name: '五厂'}
+            {value: 1700,name: '一车间'},
+            {value: 1300,name: '一厂'},
+            {value: 1200,name: '二厂'},
+            {value: 520,name: '五厂'}
         ];
 
         option = {
@@ -27,7 +37,7 @@ $(function () {
             },
             color: ['#af89d6', '#4ac7f5', '#0089ff', '#f36f8a', '#f5c847'],
             legend: { //图例组件，颜色和名字
-                x: '70%',
+                x: 'right',
                 y: 'center',
                 orient: 'vertical',
                 itemGap: 12, //图例每项之间的间隔
@@ -59,8 +69,9 @@ $(function () {
                 label: { //标签的位置
                     normal: {
                         show: true,
-                        position: 'inside', //标签的位置
-                        formatter: "{d}%",
+                        position: 'outside', //标签的位置
+                        formatter: "{c}件",
+                        // formatter: "{c}件({d}%)",
                         textStyle: {
                             color: '#fff',
                         }
@@ -372,7 +383,6 @@ $(function () {
                     }
                 },
                 zlevel: 2,
-                barWidth: '20%',
                 data: data[0].data,
             }]
         }
@@ -561,37 +571,50 @@ $(function () {
             myChart.resize();
         });
     } 
-
-    function InitStyles(){
-        var topN=8;
+ 
+    function InitStyles(){  
         var stylehtml="";
-        var rowheight=parseInt(($(".cen-top").height()-35)/(topN+1));
-        $.each(stylelive.data,function(i,item){
-            if(i<topN){
-                if(i%2==0){
-                    stylehtml+="<tr class='abrow' style='height:"+rowheight+"px'>";
-                }else{
-                    stylehtml+="<tr style='height:"+rowheight+"px'>";
-                }
-                // stylehtml+="<td>"+item.BUY+"-"+item.StyleNo+"</td>";
-                stylehtml+="<td>"+item.StyleNo+"</td>";
-                stylehtml+="<td>"+item.PreCutQty+"</td>";
-                stylehtml+="<td class='piechart'><div id='sc_piechart_"+i+"'></div></td>";
-                stylehtml+="<td class='piechart'><div id='cf_piechart_"+i+"'></div></td>";
-                stylehtml+="<td class='piechart'><div id='zx_piechart_"+i+"'></div></td>";
-                stylehtml+="<td class='piechart'><div id='ck_piechart_"+i+"'></div></td>"; 
-                stylehtml+="</tr>";
+        var rowheight=parseInt(($(".cen-top").height()-35-40)/stylepage.pageSize);
+        var startindex=(stylepage.page-1)*stylepage.pageSize;
+        var endindex=startindex+stylepage.pageSize;
+        if(endindex>=stylelive.data.length){endindex=stylelive.data.length;}
+        var item=null;
+        for(var i=startindex;i<endindex;i++){
+            item=stylelive.data[i];
+            if(i%2==0){
+                stylehtml+="<div class='row abrow' style='height:"+rowheight+"px'>";
+            }else{
+                stylehtml+="<div class='row' style='height:"+rowheight+"px'>";
             }
-        });
-        $("#stylelist tbody").html(stylehtml);
-        $("#stylelist thead>tr").css({height:rowheight+"px"});
-
-        $.each(stylelive.data,function(i,item){
-            if(i<topN){
+            // stylehtml+="<td>"+item.BUY+"-"+item.StyleNo+"</td>"; 
+            stylehtml+="<div class='p25'>"+item.BUY+"-"+item.StyleNo+"</div>";
+            stylehtml+="<div class='p15'>"+item.PreCutQty+"</div>"; 
+            stylehtml+="<div class='p15 piechart' id='sc_piechart_"+i+"'></div>";
+            stylehtml+="<div class='p15 piechart' id='cf_piechart_"+i+"'></div>";
+            stylehtml+="<div class='p15 piechart' id='zx_piechart_"+i+"'></div>";
+            stylehtml+="<div class='p15 piechart' id='ck_piechart_"+i+"'></div>"; 
+            stylehtml+="</div>";
+        }
+        $("#stylelist .tbody").html(stylehtml).css({"margin-left":"100%"});
+        $("#stylelist .thead>div.row").css({height:rowheight+"px"});
+        $("#stylelist .tbody").animate({"margin-left":0},500,function(){
+            // $(this).animate({"height":500},100,function(){
+            //     $(this).animate({"backgroundColor":"red"})
+            // })
+            for(var i=startindex;i<endindex;i++){
+                item=stylelive.data[i];
                 Refresh_StylePieChart(i,item);
             }
-        });
+
+            if(stylepage.page<stylepage.totalpage){
+                stylepage.page++;
+            }else{
+                stylepage.page=1;
+            } 
+            setTimeout(InitStyles,10000);
+        })
     }
+
     //刷新款式完成百分比
     function Refresh_StylePieChart(index,data){
         RefreshPieChart("sc_piechart_"+index,[{name:(data.CutQty/data.PreCutQty*100).toFixed(0),value:data.CutQty},{name:'',value:(data.PreCutQty-data.CutQty)}])
@@ -601,7 +624,8 @@ $(function () {
     }
     function RefreshPieChart(_contairId,data){
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById(_contairId));
+        var contar=document.getElementById(_contairId);
+        var myChart = echarts.init(contar);
         option = {
             color:["#4ee3b9","#f8816e","#FFFFFF"],
             series: [{
@@ -731,7 +755,7 @@ $(function () {
             cpohtml+="<div class='p15'><span class='alarm "+getleveClass(cpolist[i])+"'>"+cpolist[i].ShipDate.substr(5)+"</span></div>";
             cpohtml+="<div class='p15'>"+cpolist[i].Destination+"</div>";
             // cpohtml+="<div>"+(cpolist[i].CutQty-cpolist[i].ComplateQty)+"</div>";
-            cpohtml+="<div class='percent p15'><span></span>"+(cpolist[i].ComplateQty*1.00/cpolist[i].CutQty*100).toFixed(0)+"% </div>";
+            cpohtml+="<div class='percent p15'><span></span>"+(cpolist[i].CutQty-cpolist[i].ComplateQty)+" </div>";
             cpohtml+="</div>";
         }
         $("#cpolist .tbody").html(cpohtml);

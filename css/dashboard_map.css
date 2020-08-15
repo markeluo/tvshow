@@ -314,21 +314,13 @@ div.p100{width:100%;}
 #cpolist .tbody::-webkit-scrollbar{display: none;}
 #cpolist .tbody .row div{height:40px;line-height:40px;text-align: center;}
 span.sortno{padding:2px 5px;font-size:16px;border-radius:5px;background-color:#0089ff;font-weight: bold;}
+div.percent{text-align: left !important;}
 div.percent>span{margin-right:3px;}
 
 /*款式进度*/
-.tabsty.styletab{
-    width:100%;
-    height:calc(100% - 35px);
-    font-size: 16px;
-    color:#FFFFFF;
-} 
-.tabsty.styletab>tbody>tr>td{text-align: center;}
-/* .tabsty>tbody>tr>td{border-bottom:dotted 1px #DCDCDC;} */
-.tabsty.styletab>thead th{font-size:20px;}
-.tabsty.styletab>thead>tr{height:70px;}
-.tabsty.styletab th.td10{width: 10%;}
-.tabsty.styletab th.td20{width: 20%;}
-.tabsty.styletab>thead>tr th img{width: auto;height: 40%;min-height: 30px;margin-right: 5px;}
-.tabsty.styletab td{font-size:18px}
-.tabsty.styletab td.piechart>div{width: 100%;height:100%;}
+#stylelist{width:100%;height:calc(100% - 35px);font-size: 16px;color:#FFFFFF;overflow: hidden;} 
+#stylelist .thead{height:40px;line-height:40px;}
+#stylelist .thead div{height:100%;text-align: center;}
+#stylelist .thead div img{width: auto;height:85%;margin-right: 5px;}
+#stylelist .tbody .row div{text-align: center;height:100%; display:-webkit-box;-webkit-box-orient: horizontal;-webkit-box-pack: center;-webkit-box-align: center;} 
+#stylelist .tbody.hiden{display: none;}
