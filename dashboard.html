@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MES综合大数据平台</title>
+    <link rel="stylesheet" href="css/dashboard_common.css">
+    <link rel="stylesheet" href="css/dashboard_map.css">
+</head>
+<body>
+<div class="data">
+
+    <div class="data-title">
+        <div class="title-left fl"></div>
+        <div class="title-center fl">MES综合大数据平台</div>
+        <div class="title-right fr"></div>
+    </div>
+    <div class="data-content">
+        <div class="con-left fl">
+            <div class="left-top">
+                <div class="info">
+                    <div class="info-title">实时统计</div>
+                    <img src="images/dashboard/bj-1.png" alt="" class="bj-1">
+                    <img src="images/dashboard/bj-2.png" alt="" class="bj-2">
+                    <img src="images/dashboard/bj-3.png" alt="" class="bj-3">
+                    <img src="images/dashboard/bj-4.png" alt="" class="bj-4">
+                    <div class="info-main">
+                        <div class="info-1">
+                            <div class="info-img fl">
+                                <img src="images/dashboard/info-img-1.png" alt="">
+                            </div>
+                            <div class="info-text fl">
+                                <p>上线款(款)</p>
+                                <p>35</p>
+                            </div>
+                        </div>
+                        <div class="info-2">
+                            <div class="info-img fl">
+                                <img src="images/dashboard/info-img-2.png" alt="">
+                            </div>
+                            <div class="info-text fl">
+                                <p>CPO订单量(个)</p>
+                                <p>100</p>
+                            </div>
+                        </div>
+                        <div class="info-3">
+                            <div class="info-img fl">
+                                <img src="images/dashboard/info-img-3.png" alt="">
+                            </div>
+                            <div class="info-text fl">
+                                <p>订单总数(件)</p>
+                                <p>128,457</p>
+                            </div>
+                        </div>
+                        <div class="info-4">
+                            <div class="info-img fl">
+                                <img src="images/dashboard/info-img-4.png" alt="">
+                            </div>
+                            <div class="info-text fl">
+                                <p>完成率(%)</p>
+                                <p>83</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="top-bottom"></div> -->
+            </div>
+            <div class="left-bottom">
+                <div class="title">订单货期预警</div>
+                <img src="images/dashboard/bj-1.png" alt="" class="bj-1">
+                <img src="images/dashboard/bj-2.png" alt="" class="bj-2">
+                <img src="images/dashboard/bj-3.png" alt="" class="bj-3">
+                <img src="images/dashboard/bj-4.png" alt="" class="bj-4">
+                <div class="charts">
+                    <div id="cpolist" class="tabsty">
+                        <div class="thead">
+                            <div class="nosty p10"></div>
+                            <div class="p30">CPO</div>
+                            <div class="p15">款号</div>
+                            <div class="p15">货期</div>
+                            <div class="p15">走地</div>
+                            <div class="p15">完成率</div>
+                        </div>
+                        <div class="tbody"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="con-center fl">
+            <div class="cen-top">
+                <div class="title">款式进度</div>
+                <table id="stylelist" class="tabsty styletab">
+                    <thead>
+                        <tr>
+                            <th class="td10">款式</th>
+                            <th class="td10">预裁</th>
+                            <th class="td20"><img src="images/dashboard/live_sc.png">实裁</th>
+                            <th class="td20"><img src="images/dashboard/live_cf.png">车缝</th>
+                            <th class="td20"><img src="images/dashboard/live_bz.png">装箱</th>
+                            <th class="td20"><img src="images/dashboard/live_ch.png">出库</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="cen-bottom">
+                <div class="title">疵点问题 TOP 10</div>
+                <img src="images/dashboard/bj-1.png" alt="" class="bj-1">
+                <img src="images/dashboard/bj-2.png" alt="" class="bj-2">
+                <img src="images/dashboard/bj-3.png" alt="" class="bj-3">
+                <img src="images/dashboard/bj-4.png" alt="" class="bj-4">
+                <div id="echarts_3" class="charts"></div>
+            </div>
+        </div>
+        <div class="con-right fr">
+            <div class="right-top">
+                <div class="title">今日进度</div>
+                <img src="images/dashboard/bj-1.png" alt="" class="bj-1">
+                <img src="images/dashboard/bj-2.png" alt="" class="bj-2">
+                <img src="images/dashboard/bj-3.png" alt="" class="bj-3">
+                <img src="images/dashboard/bj-4.png" alt="" class="bj-4">
+                <div id="echarts_4" class="charts"></div>
+            </div>
+            <div class="right-center">
+                <div class="title">今日在线人数</div>
+                <img src="images/dashboard/bj-1.png" alt="" class="bj-1">
+                <img src="images/dashboard/bj-2.png" alt="" class="bj-2">
+                <img src="images/dashboard/bj-3.png" alt="" class="bj-3">
+                <img src="images/dashboard/bj-4.png" alt="" class="bj-4">
+                <div id="echarts_2" class="charts"></div>
+            </div>
+            <div class="right-bottom">
+                <div class="title">今日车间产量占比</div>
+                <img src="images/dashboard/bj-1.png" alt="" class="bj-1">
+                <img src="images/dashboard/bj-2.png" alt="" class="bj-2">
+                <img src="images/dashboard/bj-3.png" alt="" class="bj-3">
+                <img src="images/dashboard/bj-4.png" alt="" class="bj-4">
+                <div id="echarts_1" class="charts"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="lib/jquery-2.0.0.min.js"></script>
+<script src="lib/echarts/echarts.min.js"></script>
+<script src="lib/jquery.sparkline.min.js"></script>
+<script src="lib/echarts/china.js"></script>
+<script src="data/stylelive.js"></script> 
+<script src="js/dashboard.js"></script> 
+</html>
