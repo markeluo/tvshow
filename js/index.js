@@ -3,8 +3,34 @@ $(document.body).ready(function(){
     var urlparas=getQueryObject();
     LineCode=urlparas.linecode;//解析产线代码
     reloadData();
-    setInterval(pageSwitch,5000);
+    setTimeout(pageSwitch,switchnum);
+    setInterval(upswliveTime,1000);
 });
+
+// 对Date的扩展，将 Date 转化为指定格式的String   
+// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，   
+// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)   
+// 例子：   
+// (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423   
+// (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18   
+Date.prototype.Format = function(fmt)   
+{ //author: meizz   
+  var o = {   
+    "M+" : this.getMonth()+1,                 //月份   
+    "d+" : this.getDate(),                    //日   
+    "h+" : this.getHours(),                   //小时   
+    "m+" : this.getMinutes(),                 //分   
+    "s+" : this.getSeconds(),                 //秒   
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度   
+    "S"  : this.getMilliseconds()             //毫秒   
+  };   
+  if(/(y+)/.test(fmt))   
+    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+  for(var k in o)   
+    if(new RegExp("("+ k +")").test(fmt))   
+  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+  return fmt;   
+}
 
 function getQueryObject(url) {
     url = url == null ? window.location.href : url;
@@ -21,7 +47,13 @@ function getQueryObject(url) {
     return obj;
 }
 
+//车缝看板时间更新
+function upswliveTime(){
+    $("#sw_live_time").html(new Date().Format("yyyy年MM月dd日 hh:mm:ss"));
+}
+
 //页面切换
+var switchnum=10000;
 function pageSwitch(){
     var tindex = $("div.pageitem").index($("div.pageitem.actived"))
     var total=$("div.pageitem").length;
@@ -55,17 +87,24 @@ function pageSwitch(){
     $("div.pageitem").eq(_index).addClass("actived");
     if(_index==1){_refreshMarker();}
     if(_index==(total-1)){reloadData();}
+    if(_index==7){
+        switchnum=10000;
+    }else{
+        switchnum=5000;
+    }
+    setTimeout(pageSwitch,switchnum);
 }
 
 //region  2.数据处理--start
 var cp_mb=6;//次品率
 var ftt_mb=90;//FTT目标
 function reloadData(){
+    refreshSWLive();
     refreshtarget();
     refreshStyleMarkers();
     refreshFTTRate();
     refreshDefRate();
-    freshCharts();
+    refreshCharts();
 }
 
 //2.1.刷新目标与待完成
@@ -160,7 +199,7 @@ function refreshDefRate(){
 }
 
 //2.5.刷新图表显示
-function freshCharts(){
+function refreshCharts(){
     DAL.GetFTTHistory(LineCode,function(rlt){
         if(rlt && rlt.code==200){
             chars=[];
@@ -177,6 +216,36 @@ function freshCharts(){
             initFTT_Chart('FTT_Month',m_title,m_data.x,m_data.y);      
         }
     });
+}
+
+//2.6.刷新车缝班组目标与达成
+function refreshSWLive(){
+    DAL.GetSWLive(LineCode,function(rlt){
+        $("#SW_Live").html("无产量数据!");
+        if(rlt && rlt.code==200 && rlt.data.length>0){ 
+            $("#sw_live_title").html(rlt.data[0].LineName+" 车缝看板");
+            var tmpdata=rlt.data;
+            var swlivetbhtml="<table class='sw_live_tb'><thead><th>BUY</th><th>款号</th><th>目标</th><th>实际</th><th>达成</th></thead>";
+            for(var i=0;i<tmpdata.length;i++){
+                swlivetbhtml+=refreshSWLive_rowformat(tmpdata[i],i);
+            }
+            swlivetbhtml+="</table>";
+            $("#SW_Live").html(swlivetbhtml);
+        }
+    });
+}
+function refreshSWLive_rowformat(_rowdata,i){
+    var rowhtml="<tr>"
+    if(i%2==0){
+        rowhtml="<tr class='abrow'>"
+    }
+    rowhtml+="<td>"+_rowdata.BUY+"</td>";
+    rowhtml+="<td>"+_rowdata.StyleNo+"</td>";
+    rowhtml+="<td>"+_rowdata.TargetQty+"</td>";
+    rowhtml+="<td>"+_rowdata.Qty+"</td>";
+    rowhtml+="<td>"+_rowdata.AchievRate+"%</td>";
+    rowhtml+="</tr>";
+    return rowhtml;
 }
  
 //2.5.1.图表初始化

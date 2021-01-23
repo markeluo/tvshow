@@ -154,3 +154,95 @@ table.pagecontent4 tr td{
     width:100%;
     height:100%;
 }
+/*Page 8------------Start*/
+.pagecontent8{
+    width:100%;
+    height:100%;
+    padding:1% 1%;
+    background: url(../images/dashboard/map_bg.png) center;
+    min-width: 1366px;
+}
+.pagecontent8>.data-title {
+    width: 100%;
+    height: 115px;
+    padding: 30px 0 35px 0;
+    box-sizing: border-box;
+}
+.pagecontent8>.data-title>.fl{
+    float: left;
+}
+.pagecontent8>.data-title>.fr{
+    float: right;
+    text-align: right;
+    color: #20b879;
+}
+.pagecontent8>.data-title>.title-center{
+    width: 500px;
+    height: 50px;
+    box-sizing: border-box;
+    border-right: 5px solid #0089ff;
+    border-left: 5px solid #0089ff;
+    /* background: url("../images/dashboard/title.png") no-repeat; */
+    background-image: linear-gradient(180deg,#f6fcfe,#34b7f1);
+    -webkit-background-clip:text;
+    color: transparent;
+    font-size:2em;
+    font-weight: bold;
+    line-height: 50px;
+    text-align: center;
+}
+.pagecontent8>.data-title>.title-left,
+.pagecontent8>.data-title>.title-right{
+    width:calc(50% - 250px);
+    height: 50px;
+    /* background: #0089ff;
+    margin-top: 23px; */
+}
+.pagecontent8>div.cen-bottom{
+    width:100%;
+    height: calc(100% - 105px);
+    border: 1px solid #20558b;
+    /*border-radius: 4px;*/
+    box-sizing: border-box;
+    position: relative;
+    position: relative;
+    padding:1% 1%;
+}
+.pagecontent8 div,th,td {
+    color: #fff;
+    font-size: 1.6em;
+}
+.pagecontent8 tr>td {
+    font-size: 2.2em;
+    color: #20b879; 
+    /* color: #e53333; */
+    font-weight: bold;
+}
+.pagecontent8 tr.abrow{
+    background-color: rgba(20, 63, 207, 0.283);
+}
+.pagecontent8 img.bj-1{
+    position: absolute;
+    left:-1px;
+    top:-1px;
+}
+.pagecontent8 img.bj-2{
+    position: absolute;
+    right:-1px;
+    top:-1px;
+}
+.pagecontent8 img.bj-3{
+    position: absolute;
+    right:-1px;
+    bottom:-1px;
+}
+.pagecontent8 img.bj-4{
+    position: absolute;
+    left:-1px;
+    bottom:-1px;
+} 
+.sw_live_tb{
+    width: 100%;
+    height:100%;
+}
+/*Page 8------------End*/

@@ -3,7 +3,8 @@
 */
 (function(window){
     var u={
-        serverpth:'http://172.18.8.1:5000/api/mes/'
+        serverpth:'http://172.18.8.1:5000/api/mes/',
+        //serverpth:'http://localhost:5000/api/mes/',
     }
     u._get=function(url,para,callfun){
         $.getJSON(u.serverpth+url,function(data,status){
@@ -100,6 +101,30 @@
     //5.
     u.GetFTTHistory=function(_linecode,_call){
         u._get("TV/fttls/"+_linecode,null,function(_rtl){
+            _call(_rtl);
+        });
+        // var FTT_data=[
+        //     {NM:"03/23##周1",FTT_RT:"78",TYP:"DAY"},
+        //     {NM:"03/24##周2",FTT_RT:"80",TYP:"DAY"},
+        //     {NM:"03/25##周3",FTT_RT:"75",TYP:"DAY"},
+        //     {NM:"03/26##周4",FTT_RT:"82",TYP:"DAY"},
+        //     {NM:"03/27##周5",FTT_RT:"80",TYP:"DAY"},
+        //     {NM:"03/28##周6",FTT_RT:"75",TYP:"DAY"},
+        //     {NM:"第9周",FTT_RT:"87",TYP:"WEEK"},
+        //     {NM:"第10周",FTT_RT:"90",TYP:"WEEK"},
+        //     {NM:"第11周",FTT_RT:"85",TYP:"WEEK"},
+        //     {NM:"第12周",FTT_RT:"80",TYP:"WEEK"},
+        //     {NM:"第13周",FTT_RT:"89",TYP:"WEEK"},
+        //     {NM:"1月",FTT_RT:"89",TYP:"MONTH"},
+        //     {NM:"2月",FTT_RT:"90",TYP:"MONTH"},
+        //     {NM:"3月",FTT_RT:"75",TYP:"MONTH"},
+        // ];
+        // var data={code:200,data:FTT_data,msg:""};
+        // _call(data);
+    }
+    //8.车缝班组产量目标与达成
+    u.GetSWLive=function(_linecode,_call){
+        u._get("TV/swlive/"+_linecode,null,function(_rtl){
             _call(_rtl);
         });
         // var FTT_data=[
