@@ -220,31 +220,55 @@ function refreshCharts(){
 
 //2.6.刷新车缝班组目标与达成
 function refreshSWLive(){
-    DAL.GetSWLive(LineCode,function(rlt){
-        $("#SW_Live").html("无产量数据!");
+    DAL.GetSWLive(LineCode,function(rlt){ 
         if(rlt && rlt.code==200 && rlt.data.length>0){ 
             $("#sw_live_title").html(rlt.data[0].LineName+" 车缝看板");
             var tmpdata=rlt.data;
-            var swlivetbhtml="<table class='sw_live_tb'><thead><th>BUY</th><th>款号</th><th>目标</th><th>实际</th><th>达成</th></thead>";
+            var swlivetbhtml="";
             for(var i=0;i<tmpdata.length;i++){
                 swlivetbhtml+=refreshSWLive_rowformat(tmpdata[i],i);
-            }
-            swlivetbhtml+="</table>";
+            } 
             $("#SW_Live").html(swlivetbhtml);
+
+            //如果有多个款，则启动定时切换
+            if(tmpdata.length>1){
+                sw_live_Change_timnum=switchnum/tmpdata.length;
+                setTimeout(sw_live_Change,sw_live_Change_timnum);
+            }
+        }else
+        {
+            $("#sw_live_title").html(LineCode.substr(5)+"组 车缝看板");
+            var nodatahtml="<table class='sw_live_table actived'><tr class='tr_row row3'><td>无车缝产量数据!</td></tr></table>";
+            $("#SW_Live").html(nodatahtml);
         }
     });
 }
-function refreshSWLive_rowformat(_rowdata,i){
-    var rowhtml="<tr>"
-    if(i%2==0){
-        rowhtml="<tr class='abrow'>"
+
+//定时切换
+var sw_live_Change_timnum=switchnum;
+function sw_live_Change(){
+    var tindex = $("#SW_Live table").index($("table.sw_live_table.actived"))
+    var total=$("#SW_Live table.sw_live_table").length;
+    var _index=tindex+1;
+    if(_index>=total){
+        _index=0;
     }
-    rowhtml+="<td>"+_rowdata.BUY+"</td>";
-    rowhtml+="<td>"+_rowdata.StyleNo+"</td>";
-    rowhtml+="<td>"+_rowdata.TargetQty+"</td>";
-    rowhtml+="<td>"+_rowdata.Qty+"</td>";
-    rowhtml+="<td>"+_rowdata.AchievRate+"%</td>";
-    rowhtml+="</tr>";
+ 
+    $("#SW_Live table.sw_live_table").eq(tindex).removeClass("actived");
+    $("#SW_Live table.sw_live_table").eq(_index).addClass("actived");   
+    setTimeout(sw_live_Change,sw_live_Change_timnum);
+}
+
+function refreshSWLive_rowformat(_rowdata,i){
+    var rowhtml="<table class='sw_live_table' id='sw_live_tb_"+i+"'>";
+    if(i==0){
+        rowhtml="<table class='sw_live_table actived' id='sw_live_tb_"+i+"'>";
+    }
+    rowhtml+="<tr class='tr_row row1'><td class='td_title'>款号</td><td>"+_rowdata.StyleNo+"</td></tr>";
+    rowhtml+="<tr class='tr_row row2'><td class='td_title'>目标</td><td>"+_rowdata.TargetQty+"</td></tr>";
+    rowhtml+="<tr class='tr_row row3'><td class='td_title'>实际</td><td>"+_rowdata.Qty+"</td></tr>";
+    rowhtml+="<tr class='tr_row row4'><td class='td_title'>达成</td><td>"+_rowdata.AchievRate+"%</td></tr>";
+    rowhtml+="</table>";
     return rowhtml;
 }
  
