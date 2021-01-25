@@ -238,7 +238,7 @@ function refreshSWLive(){
         }else
         {
             $("#sw_live_title").html(LineCode.substr(5)+"组 车缝看板");
-            var nodatahtml="<table class='sw_live_table actived'><tr class='tr_row row3'><td>无车缝产量数据!</td></tr></table>";
+            var nodatahtml="<table class='sw_live_table actived'><tr class='tr_row'><td>无车缝产量数据!</td></tr></table>";
             $("#SW_Live").html(nodatahtml);
         }
     });
@@ -264,10 +264,9 @@ function refreshSWLive_rowformat(_rowdata,i){
     if(i==0){
         rowhtml="<table class='sw_live_table actived' id='sw_live_tb_"+i+"'>";
     }
-    rowhtml+="<tr class='tr_row row1'><td class='td_title'>款号</td><td>"+_rowdata.StyleNo+"</td></tr>";
-    rowhtml+="<tr class='tr_row row2'><td class='td_title'>目标</td><td>"+_rowdata.TargetQty+"</td></tr>";
-    rowhtml+="<tr class='tr_row row3'><td class='td_title'>实际</td><td>"+_rowdata.Qty+"</td></tr>";
-    rowhtml+="<tr class='tr_row row4'><td class='td_title'>达成</td><td>"+_rowdata.AchievRate+"%</td></tr>";
+    rowhtml+="<tr class='tr_row row1'><td colspan='3'>"+_rowdata.StyleNo+"</td></tr>";
+    rowhtml+="<tr class='tr_row row2'><td class='td_title'>目标</td><td class='td_title'>实际</td><td class='td_title'>达成</td></tr>";
+    rowhtml+="<tr class='tr_row row3'><td>"+_rowdata.TargetQty+"</td><td>"+_rowdata.Qty+"</td><td>"+_rowdata.AchievRate+"%</td></tr>";
     rowhtml+="</table>";
     return rowhtml;
 }
