@@ -28,11 +28,55 @@ html,body,div,span,label,a,h1,h2,h3,h4,h5,h6,tr,td{
 .font_x5{
     font-size: 3em;
     font-weight: bold;
+    color:#000000;
 }
 
 div.main{
     height:100%;
     width:100%;
+    display:-webkit-box;
+    display: -moz-box;
+    display: box;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    box-orient: vertical;
+}
+div.main div.head{
+    height:120px;
+    background-color:#090707;
+    position: relative;
+}
+div.head .data-title {
+    width: 100%;
+    height: 120px; 
+    box-sizing: border-box;
+    display:-webkit-box;
+    display: -moz-box;
+    display: box;
+}
+div.head .data-title>.fl{ 
+    width:calc(50% - 300px);
+}
+div.head .data-title>.fr{ 
+    text-align: right;
+    color: #20b879;
+    width:calc(50% - 300px);
+    font-size:3em; 
+    font-weight: bold;
+    line-height:120px;
+    padding-right:20px;
+}
+div.head .data-title>.title-center{
+    width: 600px; 
+    font-size:5em;
+    color: #FFFFFF;
+    font-weight: bold;
+    line-height:120px;
+    text-align: center;
+}
+div.main div.content{
+    -webkit-box-flex: 1;
+    position: relative;
 }
 .pageitem{
     width: 100%;
@@ -84,16 +128,40 @@ table.pagecontent1 tr td{
     text-align: center;
 }
 .pagecontent2 tr td.left{
-    width: 35%;
+    width: 25%;
     text-align: right;
 }
 .pagecontent2 tr td.right{
-    width: 65%;
+    width:30%; 
+}
+.pagecontent2 tr td.right table{
+    width:100%;
+}
+.pagecontent2 tr td.right table td.merage{
+    text-align: center;
+}
+.pagecontent2 tr td.right table td{
+    text-align: left;
+    color:#000000; 
+    border-bottom: dotted 2px #dcdcdc;
+    font-size:3em;
+    font-weight: bold;
+}
+.pagecontent2 tr td.right table td.defname{
+    width:400px;
+    overflow: hidden;
+}
+.pagecontent2 tr td.right table td.defval{
+    color: #ff0000;
+}
+
+.pagecontent2 tr td.styleimg{
+    width: 45%;
     text-align:left;
     position: relative;
     padding: 50px 50px;
 }
-.pagecontent2 tr td.right img{
+.pagecontent2 tr td.styleimg img{
     height:100%;
 }
 .styleimg>span{
@@ -128,11 +196,24 @@ table.pagecontent4 tr td{
 .pagecontent5{
     width:100%;
     height:100%;
-    padding:5% 10%;
+    display: -webkit-box; 
 }
 .pagecontent5>div{
-    width:100%;
+    width: 50%;
+    min-height:900px;
+}
+.pagecontent5>div:nth-child(1){
+    border-right: solid 3px #DCDCDC;
+}
+.pagecontent5>div.chart_bottom{
     height:100%;
+}
+.pagecontent5>div.chart_bottom>div{
+    height:50%;
+    min-height:450px;
+}
+.pagecontent5>div.chart_bottom>div:nth-child(1){
+    border-bottom: solid 3px #DCDCDC;
 }
 /*Page 6------------Start*/
 .pagecontent6{
@@ -158,8 +239,6 @@ table.pagecontent4 tr td{
 .pagecontent8{
     width:100%;
     height:100%;
-    padding:1% 1%;
-    /* background: url(../images/dashboard/map_bg.png) center; */
     min-width: 1366px;
 }
 .pagecontent8 div,th,td {
@@ -167,43 +246,9 @@ table.pagecontent4 tr td{
     color: #fff;
     font-size: 1.6em;
 }
-.pagecontent8>.data-title {
-    width: 100%;
-    height: 115px;
-    padding: 30px 0 35px 0;
-    box-sizing: border-box;
-}
-.pagecontent8>.data-title>.fl{
-    float: left;
-}
-.pagecontent8>.data-title>.fr{
-    float: right;
-    text-align: right;
-    color: #20b879;
-}
-.pagecontent8>.data-title>.title-center{
-    width: 600px;
-    height: 50px;
-    box-sizing: border-box;
-    /* background: url("../images/dashboard/title.png") no-repeat; */
-    background-image: linear-gradient(180deg,#666666,#000000);
-    -webkit-background-clip:text;
-    color: transparent;
-    font-size:2em;
-    font-weight: bold;
-    line-height: 50px;
-    text-align: center;
-}
 #SW_Live{
     width: 100%;
     height:100%;
-}
-.pagecontent8>.data-title>.title-left,
-.pagecontent8>.data-title>.title-right{
-    width:calc(50% - 300px);
-    height: 50px;
-    /* background: #0089ff;
-    margin-top: 23px; */
 }
 .pagecontent8>div.cen-bottom{
     width:100%;
@@ -226,7 +271,7 @@ table.pagecontent4 tr td{
 
 .pagecontent8 tr.tr_row>td{
     color: #ff0000; 
-    font-size:4em;
+    font-size:5em;
     font-weight: bold;
     border: solid 1px #dcdcdc; 
     text-align: center;
@@ -236,7 +281,7 @@ table.pagecontent4 tr td{
 .pagecontent8 tr.tr_row.row3>td{color: #ff0000;height:50%;}
 
 .pagecontent8 tr.tr_row>td.td_title{
-    font-size:3em;
+    font-size:4em;
     color:#ffffff;
     background-color:#20b879; 
 }
@@ -244,9 +289,9 @@ table.pagecontent4 tr td{
 .pagecontent8 tr.tr_row.row2>td:nth-child(2).td_title{background-color:#ff0000;width:33.33%;}
 .pagecontent8 tr.tr_row.row2>td:nth-child(3).td_title{background-color:#20b879;width:33.33%;}
 
-.pagecontent8 tr.tr_row.row3>td:nth-child(1){color:#20b879;font-size:6em;}
-.pagecontent8 tr.tr_row.row3>td:nth-child(2){color:#ff0000;font-size:6em;}
-.pagecontent8 tr.tr_row.row3>td:nth-child(3){color:#20b879;font-size:6em;}
+.pagecontent8 tr.tr_row.row3>td:nth-child(1){color:#20b879;font-size:8em;}
+.pagecontent8 tr.tr_row.row3>td:nth-child(2){color:#ff0000;font-size:8em;}
+.pagecontent8 tr.tr_row.row3>td:nth-child(3){color:#20b879;font-size:8em;}
 
 .pagecontent8 img.bj-1{
     position: absolute;

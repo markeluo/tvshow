@@ -49,7 +49,7 @@ function getQueryObject(url) {
 
 //车缝看板时间更新
 function upswliveTime(){
-    $("#sw_live_time").html(new Date().Format("yyyy年MM月dd日 hh:mm:ss"));
+    $("#sw_live_time").html(new Date().Format("MM月dd日 hh:mm:ss"));
 }
 
 //页面切换
@@ -87,7 +87,7 @@ function pageSwitch(){
     $("div.pageitem").eq(_index).addClass("actived");
     if(_index==1){_refreshMarker();}
     if(_index==(total-1)){reloadData();}
-    if(_index==7){
+    if(_index==5){
         switchnum=10000;
     }else{
         switchnum=5000;
@@ -130,8 +130,9 @@ function refreshStyleMarkers(){
         if(rlt && rlt.code==200 && rlt.data.length>0){
             var styleinf=rlt.data[0];
             styleimg_pars.markerdata=rlt.data;
+            //显示TopN信息
+            _styleDefTopN(rlt.data);
 
-            $("#GZT_BZ").html(styleinf.FactoryName+"-"+styleinf.LineName);
             $("#GZT_KH").html(styleinf.StyleNo);
             $("#GZT_TP>img").attr("src","images/"+styleinf.ImgName).css({
                 height:styleimg_pars.height+"px",
@@ -144,8 +145,43 @@ function refreshStyleMarkers(){
                 });
             }
             //_refreshMarker();
+        }else{
+            _styleDefTopN(null);
         }
     });
+}
+
+function _styleDefTopN(_data){
+    var defarrycodes=[];
+    var defarry=[];//{code:'',name:'',num:1}
+    var temindex=-1;
+    if(_data!=null && _data.length>0){
+        for(var i=0;i<_data.length;i++){
+            if(_data[i].DefectCode!=null && _data[i].DefectCode!=""){
+                temindex=defarrycodes.indexOf(_data[i].DefectCode);
+                if(temindex>-1){
+                    defarry[temindex].num++;
+                }else{
+                    defarrycodes.push(_data[i].DefectCode);
+                    defarry.push({code:_data[i].DefectCode,name:_data[i].Name,num:1});
+                }
+            }
+        }
+        //按大小，从大到小
+        defarry=defarry.sort(function(a,b){return b.num-a.num});
+        if(defarry.length<=5){}else{
+            defarry.splice(0,5);
+        }
+    }
+
+    var defhtml='';
+    if(defarry!=null && defarry.length>0){
+        defhtml+='<tr><td colspan="2" class="merage">问题Top 5</td></tr>';
+        for(var i=0;i<defarry.length;i++){
+            defhtml+='<tr><td class="defname">'+defarry[i].name+'</td><td class="defval">'+defarry[i].num+'</td></tr>';
+        }
+    }
+    $("#GZT_TOP5").html(defhtml); 
 }
 function _refreshMarker(){
     var tmpdata=styleimg_pars.markerdata;
@@ -203,17 +239,17 @@ function refreshCharts(){
     DAL.GetFTTHistory(LineCode,function(rlt){
         if(rlt && rlt.code==200){
             chars=[];
-            var d_title="每日FTT趋势图";
+            var d_title="每日  FTT趋势图";
             var d_data=filterFTTData(rlt.data,"DAY");
-            initFTT_Chart('FTT_Day',d_title,d_data.x,d_data.y);
+            initFTT_Chart('FTT_Day',d_title,d_data.x,d_data.y,"line",900);
         
-            var w_title="每周FTT趋势图";
+            var w_title="周  FTT趋势图";
             var w_data=filterFTTData(rlt.data,"WEEK");
-            initFTT_Chart('FTT_Week',w_title,w_data.x,w_data.y);
+            initFTT_Chart('FTT_Week',w_title,w_data.x,w_data.y,"column",450);
         
-            var m_title="每月FTT趋势图";
+            var m_title="月  FTT趋势图";
             var m_data=filterFTTData(rlt.data,"MONTH");
-            initFTT_Chart('FTT_Month',m_title,m_data.x,m_data.y);      
+            initFTT_Chart('FTT_Month',m_title,m_data.x,m_data.y,"area",450);      
         }
     });
 }
@@ -222,7 +258,7 @@ function refreshCharts(){
 function refreshSWLive(){
     DAL.GetSWLive(LineCode,function(rlt){ 
         if(rlt && rlt.code==200 && rlt.data.length>0){ 
-            $("#sw_live_title").html(rlt.data[0].LineName+" 车缝看板");
+            $("#sw_live_title").html(getlineName(LineCode)+" 生产看板");
             var tmpdata=rlt.data;
             var swlivetbhtml="";
             for(var i=0;i<tmpdata.length;i++){
@@ -235,9 +271,10 @@ function refreshSWLive(){
                 sw_live_Change_timnum=switchnum/tmpdata.length;
                 setTimeout(sw_live_Change,sw_live_Change_timnum);
             }
-        }else
+        }
+        else
         {
-            $("#sw_live_title").html(LineCode.substr(5)+"组 车缝看板");
+            $("#sw_live_title").html(getlineName(LineCode)+" 生产看板");
             var nodatahtml="<table class='sw_live_table actived'><tr class='tr_row'><td>无车缝产量数据!</td></tr></table>";
             $("#SW_Live").html(nodatahtml);
         }
@@ -272,11 +309,16 @@ function refreshSWLive_rowformat(_rowdata,i){
 }
  
 //2.5.1.图表初始化
-function initFTT_Chart(_contairID,_title,_xdata,_ydata){
+function initFTT_Chart(_contairID,_title,_xdata,_ydata,_type,minheight){
+    if(_type && _type!=""){}else{
+        _type="line";
+    } 
+    var sdata=formatFTTData(_xdata,_ydata,_type);
+
    return Highcharts.chart(_contairID, {
         chart: {
-            type: 'line',
-            height:888
+            type:_type,
+            height:minheight,
         },
         title: {
             text:_title,
@@ -290,7 +332,7 @@ function initFTT_Chart(_contairID,_title,_xdata,_ydata){
             categories:_xdata,
             labels:{
                 style: {
-                    color: '#666666',
+                    color: '#000000',
                     fontSize:'2em'
 			    },
                 useHTML:true
@@ -298,7 +340,7 @@ function initFTT_Chart(_contairID,_title,_xdata,_ydata){
         },
         yAxis:{
             title:{
-                text: "FTT",
+                text: "",
                 style: {
                     color: '#000000',
                     fontWeight: 'bold',
@@ -312,8 +354,8 @@ function initFTT_Chart(_contairID,_title,_xdata,_ydata){
 			    },
                 format:"{value} %"
             },
-            min:0,
-            max:120
+            min:80,
+            max:100
         },
         plotOptions:{
             series:{
@@ -321,13 +363,13 @@ function initFTT_Chart(_contairID,_title,_xdata,_ydata){
                     enabled:true,
                     format:"{y} %",
                     style: {
-                        color: '#000000', 
-                        fontSize:'2em'
+                        color: '#20b879', 
+                        fontSize:'3em'
                     },
                     y:-15
                 },
                 lineWidth:5,
-                color:'#333333',
+                color:'#20b879',
                 marker:{
                     radius:10,
                     fillColor:'#237bde'
@@ -338,17 +380,18 @@ function initFTT_Chart(_contairID,_title,_xdata,_ydata){
             enabled: false
         },
         legend:{
-            itemStyle:{
-                "color": "#333333",
-                "cursor": "pointer", 
-                "fontSize": "2em", 
-                "fontWeight": "bold" 
-            },
-            margin:30
+            enabled:false,
+            // itemStyle:{
+            //     "color": "#333333",
+            //     "cursor": "pointer", 
+            //     "fontSize": "2em", 
+            //     "fontWeight": "bold" 
+            // },
+            // margin:30
         },
         series: [{
             name: 'FTT达成',
-            data:_ydata
+            data:sdata
         }]
     });
 }
@@ -380,5 +423,41 @@ function filterFTTData(_data,_type){
         }
     }
     return tdata;
+}
+function formatFTTData(_xdata,_ydata,_type){
+    var seriesdata=[];
+    var tcolor='#20b879';
+    for(var i=0;i<_ydata.length;i++){
+        tcolor='#20b879';
+        if(_ydata[i]>90){
+            tcolor='#e53333';
+        }
+        seriesdata.push({
+            x:i,
+            y:_ydata[i],
+            color:tcolor,
+            dataLabels:{
+                style: {
+                    color:tcolor, 
+                    fontSize:'3em'
+                },
+            }
+        });
+        if(_type!="column"){
+            seriesdata[i].marker={fillColor:tcolor}
+        }
+    }
+    return seriesdata;
+}
+
+function getlineName(lineCode){
+    var lineName="";
+    for(var i=0;i<sys_lines.length;i++){
+        if(sys_lines[i].LineCode==lineCode){
+            lineName=sys_lines[i].LineName;
+            break;
+        }
+    }
+    return lineName;
 }
 //endregion 数据处理--end
