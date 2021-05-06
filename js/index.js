@@ -301,9 +301,16 @@ function refreshSWLive_rowformat(_rowdata,i){
     if(i==0){
         rowhtml="<table class='sw_live_table actived' id='sw_live_tb_"+i+"'>";
     }
-    rowhtml+="<tr class='tr_row row1'><td colspan='3'>"+_rowdata.StyleNo+"</td></tr>";
-    rowhtml+="<tr class='tr_row row2'><td class='td_title'>目标</td><td class='td_title'>实际</td><td class='td_title'>达成</td></tr>";
-    rowhtml+="<tr class='tr_row row3'><td>"+_rowdata.TargetQty+"</td><td>"+_rowdata.Qty+"</td><td>"+_rowdata.AchievRate+"%</td></tr>";
+    //效率
+    var xl_val=parseInt((_rowdata.Qty*_rowdata.NormalFS)/(_rowdata.TotalUserNum*_rowdata.WorkTime)*100);
+    //WIP
+    var wip_val=0;
+    if(_rowdata.TargetQty>0){
+        wip_val=((_rowdata.SplitQty-_rowdata.Qty)/_rowdata.TargetQty).toFixed(1)
+    }
+    rowhtml+="<tr class='tr_row row1'><td colspan='4'>"+_rowdata.BUY+'-'+_rowdata.StyleNo+"</td></tr>";
+    rowhtml+="<tr class='tr_row row2'><td class='td_title'>目标</td><td class='td_title'>实际</td><td class='td_title'>效率</td><td class='td_title'>WIP</td></tr>";
+    rowhtml+="<tr class='tr_row row3'><td>"+_rowdata.TargetQty+"</td><td>"+_rowdata.Qty+"</td><td>"+xl_val+"%</td><td>"+wip_val+"</td></tr>";
     rowhtml+="</table>";
     return rowhtml;
 }
