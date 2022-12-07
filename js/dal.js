@@ -146,6 +146,27 @@
         // var data={code:200,data:FTT_data,msg:""};
         // _call(data);
     }
+    //9.车缝班组工序平衡图数据
+    u.GetStepDiagram=function(_linecode,_call){
+        u._get("TV/stepdiagram/"+_linecode,null,function(_rtl){
+            _call(_rtl);
+        });
+        //var data=[
+        // {
+        //     "UserCode": "600018",
+        //     "UserName": "李艳梅",
+        //     "LineName": "一车间 12组",
+        //     "StepCounter": 3,
+        //     "TotalFS": 1.6603
+        // },
+        // {
+        //     "UserCode": "600036",
+        //     "UserName": "王爱丽",
+        //     "LineName": "一车间 12组",
+        //     "StepCounter": 1,
+        //     "TotalFS": 2.4611
+        // }]
+    }
 
     window.DAL= u;
   })(window);

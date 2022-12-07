@@ -100,6 +100,8 @@ var cp_mb=6;//次品率
 var ftt_mb=90;//FTT目标
 function reloadData(){
     refreshSWLive();
+    refreshStepDiagram();
+
     refreshtarget();
     refreshStyleMarkers();
     refreshFTTRate();
@@ -281,6 +283,175 @@ function refreshSWLive(){
     });
 }
 
+//2.9.刷新工序平衡图数据
+function refreshStepDiagram(){
+    DAL.GetStepDiagram(LineCode,function(rlt){ 
+        if(rlt && rlt.code==200 && rlt.data.length>0){ 
+            StepDiagramChart_LoadData(rlt.data);
+        }
+        else
+        { 
+            var nodatahtml="<table class='sw_live_table actived'><tr class='tr_row'><td>无工序分配数据!</td></tr></table>";
+            $("#SW_StepDiagram").html(nodatahtml);
+        }
+    });
+}
+
+function StepDiagramChart_LoadData(_data){
+    var styleTitle=_data[0].BUY+' '+_data[0].StyleNo+' 工序平衡图';
+    var xdataArray=[];
+    var ydata1=[];
+    var ydata2=[];
+    _data.forEach(el => {
+        xdataArray.push(el.UserName);
+        ydata1.push(el.SplitQty);
+        ydata2.push(el.TotalFS);
+    }); 
+    
+    Highcharts.chart('SW_StepDiagram_1', {
+        chart: {
+            type:'column',
+            height:parseInt($(".pagecontent9").height()/2),
+        },
+        title: {
+            text:styleTitle,
+            style: {
+				color: '#000000',
+				fontWeight: 'bold',
+                fontSize:'4em'
+			}
+        },
+        xAxis: {
+            categories:xdataArray,
+            labels:{
+                style: {
+                    color: '#000000',
+                    fontSize:'1.2em'
+			    },
+                useHTML:true,
+                rotation:60
+            }
+        },
+        yAxis:{
+            title:{
+                text: ""
+            },
+            labels:{
+                style: {
+                    color: '#666666',
+                    fontSize:'1.5em'
+			    },
+                format:"{value}"
+            },
+            min:0,
+        },
+        plotOptions:{
+            series:{
+                dataLabels:{
+                    enabled:true,
+                    format:"{y}",
+                    style: {
+                        color: '#2CA2BE', 
+                        fontSize:'1.5em'
+                    },
+                    y:-15
+                },
+                lineWidth:5,
+                color:'#2CA2BE',
+                marker:{
+                    radius:10,
+                    fillColor:'#2CA2BE'
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        legend:{
+            enabled:false, 
+        },
+        series: [{
+            name: '工序平衡图',
+            data:ydata2
+        }]
+    });
+
+    Highcharts.chart('SW_StepDiagram_2', {
+        chart: {
+            type:'line',
+            height:parseInt($(".pagecontent9").height()/2),
+        },
+        title: {
+            text:'',
+            style: {
+				color: '#000000',
+				fontWeight: 'bold',
+                fontSize:'4em'
+			}
+        },
+        xAxis: {
+            categories:xdataArray,
+            labels:{
+                style: {
+                    color: '#000000',
+                    fontSize:'1.2em'
+			    },
+                useHTML:true,
+                rotation:60
+            }
+        },
+        yAxis:{
+            title:{
+                text: "",
+                style: {
+                    color: '#000000',
+                    fontWeight: 'bold',
+                    fontSize:'1.5em'
+			    }
+            },
+            labels:{
+                style: {
+                    color: '#666666',
+                    fontSize:'1.5em'
+			    },
+                format:"{value}"
+            },
+            min:0,
+        },
+        plotOptions:{
+            series:{
+                dataLabels:{
+                    enabled:true,
+                    zIndex:6,
+                    format:"{y}",
+                    style: {
+                        color: '#DC222F', 
+                        fontSize:'2em'
+                    },
+                    y:-15
+                },
+                lineWidth:3,
+                color:'#DC222F',
+                marker:{
+                    radius:5,
+                    fillColor:'#DC222F'
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        legend:{
+            enabled:false, 
+        },
+        series: [{
+            name: '员工产量',
+            data:ydata1
+        }]
+    });
+}
+
+
 //定时切换
 var sw_live_Change_timnum=switchnum;
 function sw_live_Change(){
@@ -306,7 +477,7 @@ function refreshSWLive_rowformat(_rowdata,i){
     //WIP
     var wip_val=0;
     if(_rowdata.TargetQty>0){
-        wip_val=((_rowdata.SplitQty-_rowdata.Qty)/_rowdata.TargetQty).toFixed(1)
+        wip_val=((_rowdata.SplitQty-_rowdata.SumQty)/_rowdata.TargetQty).toFixed(1)
     }
     rowhtml+="<tr class='tr_row row1'><td colspan='4'>"+_rowdata.BUY+'-'+_rowdata.StyleNo+"</td></tr>";
     rowhtml+="<tr class='tr_row row2'><td class='td_title'>目标</td><td class='td_title'>实际</td><td class='td_title'>效率</td><td class='td_title'>WIP</td></tr>";

@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>看板监控中心</title>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap-3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap-3.3.7/css/bootstrap-theme.min.css" /> 
+    <style>
+        html,body{
+            width:100%;
+            height:100%;
+            padding:0px;
+            margin: 0px;
+        }
+        .main{
+            height: 100%;
+            width: 100%;
+            display: -webkit-box;
+            display: -moz-box;
+            display: box; 
+        }
+        .main>.left{
+            width: 150px;
+            border-right: solid 1px #dcdcdc;
+        }
+        .left ul{ 
+            width: 100%;
+            padding: 0px;
+        }
+        .left li{
+            list-style-type:none;
+            padding:10px 20px;
+            cursor: pointer;
+        }
+        .left li:hover{
+            background-color:#F3F3F3;
+            color: #666666;
+        }
+        .left li a:hover{
+            outline: none;
+            text-decoration:none;
+        }
+        .left li.actived{
+            background-color: #666666;
+            color: #FFFFFF;
+        }
+        .right{
+            -webkit-box-flex: 1;
+        }
+        #subfrm{
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div id="lineList" class="left">
+            <ul>
+                <li linecode="CJM1F02">一车间 A 02</li>
+                <li linecode="CJM1F03">一车间 A 03</li>
+                <li linecode="CJM1F05">一车间 A 05</li>
+                <li linecode="CJM1F06">一车间 A 06</li>
+                <li linecode="CJM1F07">一车间 A 07</li>
+                <li linecode="CJM1F09">一车间 A 09</li>
+                <li linecode="CJM1F11">一车间 A 10</li>
+                <li linecode="CJM1F12">一车间 A 11</li>
+                <li linecode="CJM1F13">一车间 A 12</li>
+                <li linecode="CJM1F15">一车间 A 13</li>
+                <li linecode="CJM1F10">一车间 A 15</li> 
+            </ul>
+        </div>
+        <div class="right">
+            <iframe id="subfrm" src=""></iframe>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="lib/jquery-2.0.0.min.js"></script>
+<script>
+    $(document.body).ready(function(){
+        $("#lineList li").unbind().bind("click",function(){
+            $("#lineList li").removeClass("actived");
+            $(this).addClass("actived");
+            var linecode=$(this).attr("linecode");
+            $("#subfrm").attr("src","index.html?linecode="+linecode);
+        });
+        $($("#lineList li")[0]).trigger("click");
+    });
+</script>
