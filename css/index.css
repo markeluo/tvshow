@@ -1,3 +1,7 @@
+@font-face {
+	font-family:afb;
+	src: url('../fonts/Agency_FB.ttf');
+}
 html,body{
     margin:0px;
     padding:0px;
@@ -14,7 +18,7 @@ html,body,div,span,label,a,h1,h2,h3,h4,h5,h6,tr,td{
     font-weight: bold;
 }
 .font_x2{
-    font-size: 16em;
+    font-size: 12em;
     font-weight: bold;
 }
 .font_x3{
@@ -22,11 +26,11 @@ html,body,div,span,label,a,h1,h2,h3,h4,h5,h6,tr,td{
     font-weight: bold;
 }
 .font_x4{
-    font-size: 5em;
+    font-size: 4em;
     font-weight: bold;
 }
 .font_x5{
-    font-size: 3em;
+    font-size: 2em;
     font-weight: bold;
     color:#000000;
 }
@@ -46,6 +50,10 @@ div.main div.head{
     background-color:#090707;
     position: relative;
 }
+.title-left{
+    color: #FFFFFF;
+    font-size: 2em;
+}
 div.head .data-title {
     width: 100%;
     height: 120px; 
@@ -61,9 +69,9 @@ div.head .data-title>.fr{
     text-align: right;
     color: #20b879;
     width:calc(50% - 300px);
-    font-size:3em; 
+    font-size:2em; 
     font-weight: bold;
-    line-height:120px;
+    line-height:180px;
     padding-right:20px;
 }
 div.head .data-title>.title-center{
@@ -71,8 +79,51 @@ div.head .data-title>.title-center{
     font-size:5em;
     color: #FFFFFF;
     font-weight: bold;
-    line-height:120px;
+    line-height:130px;
     text-align: center;
+}
+div.main div.mainbody{
+    -webkit-box-flex: 1;
+    position: relative;
+    display: -webkit-box;
+}
+
+div.main div.mainbody .leftpanel{
+    width: 30%;
+    background-color: #058282; 
+}
+/*左侧车缝指标看板 start -----*/
+table.kpitable{
+    width: 100%;
+    margin-top: 40px;
+}
+table.kpitable td{ 
+     
+}
+table.kpitable td.lefttle{
+    font-size: 3em;
+    font-weight: 600;
+    width: 45%; 
+    text-align: right;
+    color: #d9d9d9;
+    font-family: 'afb';
+}
+table.kpitable td.rightval{
+    font-size: 4em;
+    font-weight: 600;
+    width: 55%;
+    font-family: 'afb';
+    text-align: left;
+    text-shadow: 0 0 25px #05f3f3;
+}
+table.kpitable td.rightval.light{
+    color: #ff6969;
+}
+/*左侧车缝指标看板 end -----*/
+
+div.main div.mainbody .rightpanel{
+    -webkit-box-flex: 1; 
+    display: -webkit-box;
 }
 div.main div.content{
     -webkit-box-flex: 1;
@@ -133,6 +184,7 @@ table.pagecontent1 tr td{
 }
 .pagecontent2 tr td.right{
     width:30%; 
+    padding-right: 20px;
 }
 .pagecontent2 tr td.right table{
     width:100%;
@@ -144,7 +196,7 @@ table.pagecontent1 tr td{
     text-align: left;
     color:#000000; 
     border-bottom: dotted 2px #dcdcdc;
-    font-size:3em;
+    font-size:2em;
     font-weight: bold;
 }
 .pagecontent2 tr td.right table td.defname{
@@ -159,7 +211,7 @@ table.pagecontent1 tr td{
     width: 45%;
     text-align:left;
     position: relative;
-    padding: 50px 50px;
+    padding: 50px 30px;
 }
 .pagecontent2 tr td.styleimg img{
     height:100%;
@@ -224,6 +276,9 @@ table.pagecontent4 tr td{
 .pagecontent6>div{
     width:100%;
     height:100%;
+}
+.font_x2.col-lg-6{
+    font-size: 10em;
 }
 /*Page 7------------Start*/
 .pagecontent7{
@@ -328,3 +383,4 @@ table.pagecontent4 tr td{
     min-height:450px;
 }
 /*Page 9------------End*/
+

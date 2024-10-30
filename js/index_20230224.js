@@ -1,9 +1,7 @@
 var LineCode="";
-let scInfo=this.screen;
 $(document.body).ready(function(){
     var urlparas=getQueryObject();
     LineCode=urlparas.linecode;//解析产线代码
- 
     reloadData();
     setTimeout(pageSwitch,switchnum);
     setInterval(upswliveTime,1000);
@@ -55,7 +53,7 @@ function upswliveTime(){
 }
 
 //页面切换
-var switchnum=5000;
+var switchnum=10000;
 function pageSwitch(){
     var tindex = $("div.pageitem").index($("div.pageitem.actived"))
     var total=$("div.pageitem").length;
@@ -89,6 +87,11 @@ function pageSwitch(){
     $("div.pageitem").eq(_index).addClass("actived");
     if(_index==1){_refreshMarker();}
     if(_index==(total-1)){reloadData();}
+    if(_index==5){
+        switchnum=10000;
+    }else{
+        switchnum=5000;
+    }
     setTimeout(pageSwitch,switchnum);
 }
 
@@ -96,7 +99,8 @@ function pageSwitch(){
 var cp_mb=6;//次品率
 var ftt_mb=90;//FTT目标
 function reloadData(){
-    refreshSWLive(); 
+    refreshSWLive();
+    refreshStepDiagram();
 
     refreshtarget();
     refreshStyleMarkers();
@@ -252,65 +256,202 @@ function refreshCharts(){
     });
 }
 
-//2.6.刷新车缝KPI指标数据
+//2.6.刷新车缝班组目标与达成
 function refreshSWLive(){
     DAL.GetSWLive(LineCode,function(rlt){ 
         if(rlt && rlt.code==200 && rlt.data.length>0){ 
             $("#sw_live_title").html(getlineName(LineCode)+" 生产看板");
-            let tmpdata=rlt.data[0]; 
-            //款式
-            $("#kip_styleno").html(tmpdata.BUY+'-'+tmpdata.StyleNo);
-            //目标
-            $("#kip_targetQty").html(tmpdata.TargetQty+" 件");
-             //实际
-             $("#kip_smQty").html(tmpdata.Qty+" 件");
-            //效率
-            var xl_val=parseInt((tmpdata.Qty*tmpdata.NormalFS)/(tmpdata.TotalUserNum*tmpdata.WorkTime)*100);
-            $("#kip_xl").html(xl_val+" %");
-            //WIP
-            var wip_val=0;
-            if(tmpdata.TargetQty>0){
-                wip_val=((tmpdata.SplitQty-tmpdata.SumQty)/tmpdata.TargetQty).toFixed(1)
+            var tmpdata=rlt.data;
+            var swlivetbhtml="";
+            for(var i=0;i<tmpdata.length;i++){
+                swlivetbhtml+=refreshSWLive_rowformat(tmpdata[i],i);
+            } 
+            $("#SW_Live").html(swlivetbhtml);
+
+            //如果有多个款，则启动定时切换
+            if(tmpdata.length>1){
+                sw_live_Change_timnum=switchnum/tmpdata.length;
+                setTimeout(sw_live_Change,sw_live_Change_timnum);
             }
-            $("#kip_wip").html(wip_val);
-            //生产周期
-            $("#kip_cycledays").html(tmpdata.CycleDays+" 天");
-            //生产天数
-            $("#kip_smdays").html(tmpdata.WorkDays+" 天");
-            //节拍时间
-            //$("#kip_steptime").html(formatStepTIme(tmpdata.NormalFS));
-            $("#kip_steptime").html(calcstepTime(tmpdata.TargetQty));
-            //班组人数
-            $("#kip_usersnum").html(tmpdata.TotalUserNum);
         }
         else
         {
-            $("#sw_live_title").html(getlineName(LineCode)+" 生产看板"); 
-            $("#kip_styleno").html('NOT FOUND');
+            $("#sw_live_title").html(getlineName(LineCode)+" 生产看板");
+            var nodatahtml="<table class='sw_live_table actived'><tr class='tr_row'><td>无车缝产量数据!</td></tr></table>";
+            $("#SW_Live").html(nodatahtml);
         }
     });
 }
-function calcstepTime(targetQty){
-    if(targetQty && targetQty>0){
-       return (660/targetQty).toFixed(1)+" 分钟";
-    }
-    return "0 分钟";
-}
-function formatStepTIme(_fs){
-    if(_fs && _fs!=''){
-        let nfs=_fs+'';
-        let fgcharIndex=nfs.indexOf('.');
-        if(fgcharIndex>-1){
-            let scenum=parseFloat("0"+nfs.substring(fgcharIndex,(nfs.length-1)));
-            scenum=parseInt(scenum*60);    
-            return nfs.substring(0,fgcharIndex)+'分'+scenum+'秒';
-        }else{
-            return nfs+'分0秒';
+
+//2.9.刷新工序平衡图数据
+function refreshStepDiagram(){
+    DAL.GetStepDiagram(LineCode,function(rlt){ 
+        if(rlt && rlt.code==200 && rlt.data.length>0){ 
+            StepDiagramChart_LoadData(rlt.data);
         }
-    }
-    return '';
+        else
+        { 
+            var nodatahtml="<table class='sw_live_table actived'><tr class='tr_row'><td>无工序分配数据!</td></tr></table>";
+            $("#SW_StepDiagram").html(nodatahtml);
+        }
+    });
 }
- 
+
+function StepDiagramChart_LoadData(_data){
+    var styleTitle=_data[0].BUY+' '+_data[0].StyleNo+' 工序平衡图';
+    var xdataArray=[];
+    var ydata1=[];
+    var ydata2=[];
+    _data.forEach(el => {
+        xdataArray.push(el.UserName);
+        ydata1.push(el.SplitQty);
+        ydata2.push(el.TotalFS);
+    }); 
+    
+    Highcharts.chart('SW_StepDiagram_1', {
+        chart: {
+            type:'column',
+            height:parseInt($(".pagecontent9").height()/2),
+        },
+        title: {
+            text:styleTitle,
+            style: {
+				color: '#000000',
+				fontWeight: 'bold',
+                fontSize:'4em'
+			}
+        },
+        xAxis: {
+            categories:xdataArray,
+            labels:{
+                style: {
+                    color: '#000000',
+                    fontSize:'1.2em'
+			    },
+                useHTML:true,
+                rotation:60
+            }
+        },
+        yAxis:{
+            title:{
+                text: ""
+            },
+            labels:{
+                style: {
+                    color: '#666666',
+                    fontSize:'1.5em'
+			    },
+                format:"{value}"
+            },
+            min:0,
+        },
+        plotOptions:{
+            series:{
+                dataLabels:{
+                    enabled:true,
+                    format:"{y}",
+                    style: {
+                        color: '#2CA2BE', 
+                        fontSize:'1.5em'
+                    },
+                    y:-15
+                },
+                lineWidth:5,
+                color:'#2CA2BE',
+                marker:{
+                    radius:10,
+                    fillColor:'#2CA2BE'
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        legend:{
+            enabled:false, 
+        },
+        series: [{
+            name: '工序平衡图',
+            data:ydata2
+        }]
+    });
+
+    Highcharts.chart('SW_StepDiagram_2', {
+        chart: {
+            type:'line',
+            height:parseInt($(".pagecontent9").height()/2),
+        },
+        title: {
+            text:'',
+            style: {
+				color: '#000000',
+				fontWeight: 'bold',
+                fontSize:'4em'
+			}
+        },
+        xAxis: {
+            categories:xdataArray,
+            labels:{
+                style: {
+                    color: '#000000',
+                    fontSize:'1.2em'
+			    },
+                useHTML:true,
+                rotation:60
+            }
+        },
+        yAxis:{
+            title:{
+                text: "",
+                style: {
+                    color: '#000000',
+                    fontWeight: 'bold',
+                    fontSize:'1.5em'
+			    }
+            },
+            labels:{
+                style: {
+                    color: '#666666',
+                    fontSize:'1.5em'
+			    },
+                format:"{value}"
+            },
+            min:0,
+        },
+        plotOptions:{
+            series:{
+                dataLabels:{
+                    enabled:true,
+                    zIndex:6,
+                    format:"{y}",
+                    style: {
+                        color: '#DC222F', 
+                        fontSize:'2em'
+                    },
+                    y:-15
+                },
+                lineWidth:3,
+                color:'#DC222F',
+                marker:{
+                    radius:5,
+                    fillColor:'#DC222F'
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        legend:{
+            enabled:false, 
+        },
+        series: [{
+            name: '员工产量',
+            data:ydata1
+        }]
+    });
+}
+
+
 //定时切换
 var sw_live_Change_timnum=switchnum;
 function sw_live_Change(){
@@ -325,7 +466,25 @@ function sw_live_Change(){
     $("#SW_Live table.sw_live_table").eq(_index).addClass("actived");   
     setTimeout(sw_live_Change,sw_live_Change_timnum);
 }
- 
+
+function refreshSWLive_rowformat(_rowdata,i){
+    var rowhtml="<table class='sw_live_table' id='sw_live_tb_"+i+"'>";
+    if(i==0){
+        rowhtml="<table class='sw_live_table actived' id='sw_live_tb_"+i+"'>";
+    }
+    //效率
+    var xl_val=parseInt((_rowdata.Qty*_rowdata.NormalFS)/(_rowdata.TotalUserNum*_rowdata.WorkTime)*100);
+    //WIP
+    var wip_val=0;
+    if(_rowdata.TargetQty>0){
+        wip_val=((_rowdata.SplitQty-_rowdata.SumQty)/_rowdata.TargetQty).toFixed(1)
+    }
+    rowhtml+="<tr class='tr_row row1'><td colspan='4'>"+_rowdata.BUY+'-'+_rowdata.StyleNo+"</td></tr>";
+    rowhtml+="<tr class='tr_row row2'><td class='td_title'>目标</td><td class='td_title'>实际</td><td class='td_title'>效率</td><td class='td_title'>WIP</td></tr>";
+    rowhtml+="<tr class='tr_row row3'><td>"+_rowdata.TargetQty+"</td><td>"+_rowdata.Qty+"</td><td>"+xl_val+"%</td><td>"+wip_val+"</td></tr>";
+    rowhtml+="</table>";
+    return rowhtml;
+}
  
 //2.5.1.图表初始化
 function initFTT_Chart(_contairID,_title,_xdata,_ydata,_type,minheight){
