@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>查配片品质看板</title>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap-3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap-3.3.7/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/cut_visual.css" />
+    <script type="text/javascript" src="data/week_cut_part_defrate.js"></script>
+    <script type="text/javascript" src="data/day_cut_part_total.js"></script>
+    <script type="text/javascript" src="data/every_day_live.js"></script>
+    <script type="text/javascript" src="data/every_month_live.js"></script>
+</head>
+<body class="ksh">
+    <div id="load">
+		<div class="load_img"><!-- 加载动画 -->
+			<img class="jzxz1" src="images/cut/jzxz1.png">
+			<img class="jzxz2" src="images/cut/jzxz2.png">
+		</div>
+	</div>
+	<div class="head_top" style="cursor:pointer;">
+		<img class="img-responsive" src="images/cut/jcdsj_logo.png">
+        <div class="line_name">裁床A 品质看板</div>
+	</div>
+	<div class="visual">
+		<div class="visual_top">
+            <div class="visual_box">
+				<div class="visual_title">
+					<span>今日汇总</span>
+					<img src="images/cut/ksh33.png">
+				</div>
+				<div class="visual_chart sfzcll">
+					<a>查/配片总数</a>
+					<a>合格数</a>
+					<a>查/配片疵品率</a>
+					<div class="sfzcll_pos_box">
+						<div class="sfzcll_box">
+							<img class="sfzcll_bkJk" src="images/cut/ksh34.png">
+							<img class="sfzcll_bkJk" src="images/cut/ksh34.png">
+							<img class="sfzcll_bkJk" src="images/cut/ksh34.png">
+							<img class="sfzcll_bkJk" src="images/cut/ksh34.png">
+                            <div class="sfzcll_smallBk">
+								<div class="total">
+									<span id="day_tab_qty">79986</span>
+								</div>
+							</div>
+							<div class="sfzcll_smallBk">
+								<div class="ygl">
+									<span id="day_tab_ok">78336</span>
+								</div>
+							</div>
+							<div class="sfzcll_smallBk">
+								<div class="ygh">
+									<span id="day_tab_defrate">2.06</span>
+								</div>
+							</div>
+							<div class="clear"></div>
+						</div>
+					</div>
+                    <div class="today_def_topn_chart" id="day_totalChart"></div>
+				</div>
+			</div>
+            <div class="visual_box visual_conBot">
+                <img class="visual_conBot_l" src="images/cut/ksh42.png">
+				<img class="visual_conBot_2" src="images/cut/ksh43.png">
+				<img class="visual_conBot_3" src="images/cut/ksh44.png">
+				<img class="visual_conBot_4" src="images/cut/ksh45.png">
+                <div class="week_style_chart" id="week_style_chart"></div>
+			</div>
+		</div>
+		<div class="visual_bottom">
+			<div class="visual_box day_chart">
+				<div class="visual_title">
+					<span>日趋势图</span>
+					<img src="images/cut/ksh33_2.png">
+				</div>
+				<div class="every_day_chart" id="every_day_chart"></div>
+			</div>
+			<div class="visual_box month_chart">
+				<div class="visual_title">
+					<span>月趋势图</span>
+					<img src="images/cut/ksh33_2.png">
+				</div>
+				<div class="every_month_chart" id="every_month_chart"></div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+</body>
+</html>
+<script type="text/javascript" src="lib/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="lib/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="js/dal.js"></script>
+<script type="text/javascript" src="js/cutlive.js"></script>
