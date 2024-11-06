@@ -168,6 +168,50 @@
         // }]
     }
 
+    /**
+     * 10.获取今日裁床统计数据
+     * @param {*} _lineCode 班组代码
+     * @param {*} _call 回调函数
+     */
+    u.GetCutTodayTotal=function(_lineCode,_call){
+        u._get("TV/cut/todaytotal/"+_lineCode,null,function(_rtl){
+            _call(_rtl);
+        });
+    }
+
+    /**
+     * 11.获取本周裁床款式疵点统计数据
+     * @param {*} _lineCode 班组代码
+     * @param {*} _call 回调函数
+     */
+     u.GetCutWeekTotal=function(_lineCode,_call){
+        u._get("TV/cut/weektotal/"+_lineCode,null,function(_rtl){
+            _call(_rtl);
+        });
+     }
+
+     /**
+     * 12.获取30天统计历史数据
+     * @param {*} _lineCode 班组代码
+     * @param {*} _call 回调函数
+     */
+      u.GetCutDayHistory=function(_lineCode,_call){
+        u._get("TV/cut/dayhistory/"+_lineCode,null,function(_rtl){
+            _call(_rtl);
+        });
+      }
+
+      /**
+       * 13.获取每月统计历史数据
+       * @param {*} _lineCode 
+       * @param {*} _call 
+       */
+       u.GetCutMonthHistory=function(_lineCode,_call){
+        u._get("TV/cut/monthhistory/"+_lineCode,null,function(_rtl){
+            _call(_rtl);
+        });
+       }
+
     window.DAL= u;
   })(window);
   

@@ -1,4 +1,11 @@
+var LineCode="";
 $(function(){
+    var urlparas=getQueryObject();
+    LineCode=urlparas.linecode;//解析产线代码
+    if(LineCode && LineCode!=''){}else{
+        LineCode='CJM1C01'
+    }
+
     var a=$('.visualSssf_left a')
     for(var i=0;i<a.length;i++){
         a[i].index=i;
@@ -16,10 +23,7 @@ $(function(){
     $('.sfzcll_smallBk>div').css('line-height',sfzcllHtwo+'px')
 
     //数据加载....
-    initWeekStyle_Chart(week_cut_part_defrate);
-    initDayTotal_Chart(day_cut_part_total);
-    initEveryDayLive_Chart(every_day_live);
-    initEveryMonthLive_Chart(every_month_live);
+    RefreshData();
 
     //删除加载动画
     $('#load').fadeOut(1000)
@@ -29,16 +33,87 @@ $(function(){
     ,1100);
 });
 
+function getQueryObject(url) {
+    url = url == null ? window.location.href : url;
+    var search = url.substring(url.lastIndexOf("?") + 1);
+    var obj = {};
+    var reg = /([^?&=]+)=([^?&=]*)/g;
+    search.replace(reg, function (rs, $1, $2) {
+        var name = decodeURIComponent($1);
+        var val = decodeURIComponent($2);
+        val = String(val);
+        obj[name] = val;
+        return rs;
+    });
+    return obj;
+}
+
+/**
+ * 刷新数据
+ */
+function RefreshData(){
+
+    DAL.GetCutTodayTotal(LineCode,function(_rlt){
+        if(_rlt.code==200){
+            day_cut_part_total=_rlt.data;
+        }else{
+            day_cut_part_total={
+                DayTitle:'疵点问题 TOPN',
+                OkQty:0,
+                VerifyQty:0,
+                DefectRate:0,
+                DefItems:[]
+            }
+        }
+        initDayTotal_Table(day_cut_part_total);
+        initDayTotal_Chart(day_cut_part_total);
+    });
+
+    DAL.GetCutWeekTotal(LineCode,function(_rlt){
+        if(_rlt.code==200){
+            week_cut_part_defrate=_rlt.data;
+        }else{
+            week_cut_part_defrate=[];
+        }
+        initWeekStyle_Chart(week_cut_part_defrate);
+    });
+
+    DAL.GetCutDayHistory(LineCode,function(_rlt){
+        if(_rlt.code==200){
+            every_day_live=_rlt.data;
+        }else{
+            every_day_live=[];
+        }
+        initEveryDayLive_Chart(every_day_live);
+    });
+
+    DAL.GetCutMonthHistory(LineCode,function(_rlt){
+        if(_rlt.code==200){
+            every_month_live=_rlt.data;
+        }else{
+            every_month_live=[];
+        }
+        initEveryMonthLive_Chart(every_month_live);
+    });
+ 
+    //结束后再次调用
+    setTimeout(RefreshData,60000);
+}
+
+/**
+ * 初始化每日查片统计数据 表格
+ * @param {*} _data 
+ */
+function initDayTotal_Table(_data){
+    $("#day_tab_qty").html(_data.VerifyQty);
+    $("#day_tab_ok").html(_data.OkQty);
+    $("#day_tab_defrate").html(_data.DefectRate+"%");    
+}
 /**
 * 初始化每日 疵点问题汇总图表
 * @returns 
 */
 function initDayTotal_Chart(_data){
-
-$("#day_tab_qty").html(_data.VerifyQty);
-$("#day_tab_ok").html(_data.OkQty);
-$("#day_tab_defrate").html(_data.DefectRate+"%");
-
 var seriesdata=[];
 var tcolor='#ffb73a';
 var _xdata=[];
@@ -106,6 +181,10 @@ Highcharts.chart("day_totalChart", {
 });
 }
 
+/**
+ * 每日疵点问题
+ * @param {*} _data 
+ */
 function initEveryDayLive_Chart(_data){
 var seriesdata=[];
 var tcolor='#ffb73a';
@@ -156,9 +235,9 @@ Highcharts.chart("every_day_chart", {
         labels:{
             style: {
                 color: '#FFFFFF',
-                fontSize:'2em'
+                fontSize:'1.5em'
             },
-            format:"{value}",
+            format:"{value}%",
             y:-15
         },
     },
@@ -166,7 +245,7 @@ Highcharts.chart("every_day_chart", {
         series:{
             dataLabels:{
                 enabled:true,
-                format:"{y}",
+                format:"{y}%",
                 style: {
                     color: '#FFFFFF',
                     fontSize:'1.5em'
@@ -188,6 +267,10 @@ Highcharts.chart("every_day_chart", {
 });
 }
 
+/**
+ * 每月历史疵点历史汇总
+ * @param {*} _data 
+ */
 function initEveryMonthLive_Chart(_data){
 var seriesdata=[];
 var tcolor='#ffb73a';
@@ -233,9 +316,9 @@ Highcharts.chart("every_month_chart", {
         labels:{
             style: {
                 color: '#FFFFFF',
-                fontSize:'2em'
+                fontSize:'1.5em'
             },
-            format:"{value}",
+            format:"{value}%",
             y:-15
         },
     },
@@ -243,7 +326,7 @@ Highcharts.chart("every_month_chart", {
         series:{
             dataLabels:{
                 enabled:true,
-                format:"{y}",
+                format:"{y}%",
                 style: {
                     color: '#FFFFFF', 
                     fontSize:'1.5em'
@@ -265,6 +348,11 @@ Highcharts.chart("every_month_chart", {
 });
 }
 
+/**
+ * 周款式疵点汇总
+ * @param {*} _data 
+ * @returns 
+ */
 function initWeekStyle_Chart(_data){
 let _xdata=[];
 let _ydata=[];
@@ -341,7 +429,7 @@ return Highcharts.chart("week_style_chart", {
      series:{
          dataLabels:{
              enabled:true,
-             format:"{y}",
+             format:"{y}%",
              style: {
                  color: '#ffffff', 
                  fontSize:'1.3em'
