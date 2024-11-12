@@ -169,6 +169,17 @@
     }
 
     /**
+     * 9.获取班组信息
+     * @param {*} _lineCode 班组代码 
+     * @param {*} _call 回调处理函数
+     */
+    u.GetLineInfo=function(_lineCode,_call){
+        u._get("Line/info/"+_lineCode,null,function(_rtl){
+            _call(_rtl);
+        });
+    }
+
+    /**
      * 10.获取今日裁床统计数据
      * @param {*} _lineCode 班组代码
      * @param {*} _call 回调函数

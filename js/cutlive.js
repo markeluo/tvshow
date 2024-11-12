@@ -1,4 +1,5 @@
 var LineCode="";
+var LineInfo={LineCode: 'CJM1C01', LineName: '裁床A组', Kind: '裁', FactoryCode: 'CJM1C', FactoryName: '裁床'};
 $(function(){
     var urlparas=getQueryObject();
     LineCode=urlparas.linecode;//解析产线代码
@@ -22,6 +23,7 @@ $(function(){
     $('.sfzcll_box').css('line-height',sfzcllH+'px')
     $('.sfzcll_smallBk>div').css('line-height',sfzcllHtwo+'px')
 
+    LoadLineInfo();
     //数据加载....
     RefreshData();
 
@@ -46,6 +48,17 @@ function getQueryObject(url) {
         return rs;
     });
     return obj;
+}
+
+function LoadLineInfo(){
+    DAL.GetLineInfo(LineCode,function(_rlt){
+        if(_rlt && _rlt.code==200 && _rlt.data.length>0){
+            LineInfo=_rlt.data[0];
+        }else{
+            LineInfo={LineCode: 'CJM1C01', LineName: '裁床*组', Kind: '裁', FactoryCode: 'CJM1C', FactoryName: '裁床'};
+        }
+        $("#line_name").html(LineInfo.LineName+' 品质看板');
+    });
 }
 
 /**
