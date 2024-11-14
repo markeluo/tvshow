@@ -394,6 +394,8 @@ for(var i=0;i<_ydata.length;i++){
         }
     });
 }
+
+var weekName=getYearWeek(new Date());
 var minheight=($("#week_style_chart").parent().height());
 return Highcharts.chart("week_style_chart", {
  chart: {
@@ -402,7 +404,7 @@ return Highcharts.chart("week_style_chart", {
      backgroundColor:'rgba(0,0,0,0)',
  },
  title: {
-    text:'第44周 疵点率趋势图',
+    text:'第'+weekName+'周 疵点率趋势图',
     align:'center',
     style: {
         color: '#FFFFFF',
@@ -468,4 +470,18 @@ return Highcharts.chart("week_style_chart", {
      data:seriesdata
  }]
 });
+}
+
+function getYearWeek(endDate) {
+    //本年的第一天
+    var beginDate = new Date(endDate.getFullYear(), 0, 1);
+    //星期从0-6,0代表星期天，6代表星期六
+    var endWeek = endDate.getDay();
+    if (endWeek == 0) endWeek = 7;
+    var beginWeek = beginDate.getDay();
+    if (beginWeek == 0) beginWeek = 7;
+    //计算两个日期的天数差
+    var millisDiff = endDate.getTime() - beginDate.getTime();
+    var dayDiff = Math.floor(( millisDiff + (beginWeek - endWeek) * (24 * 60 * 60 * 1000)) / 86400000);
+    return Math.ceil(dayDiff / 7) + 1;
 }
