@@ -1,0 +1,292 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>GST款式报表</title>
+    <style type="text/css">
+        @page { size: auto;  margin: 0mm; }
+        html,body{
+            margin: 0px;
+            padding: 0px;
+        }
+        .main_content{
+            margin: 0px;
+            padding: 0px;
+            width: 100%;
+            height:100%;
+        }
+        .chartcontentsty{
+            position: relative;
+            margin: 0px auto;
+            padding: 20px;
+            width: 1240px;
+            height: 1754px;
+            /* border: solid 1px #DCDCDC; */
+            /* background-color:darkcyan; */
+        } 
+
+        .head_title{
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            font-size: 20px;
+            font-weight: bold;
+        } 
+        /*款式信息表格----------start*/
+        div.style_content{
+            padding:10px;
+        }
+        table.styleinfo{
+            width: 100%;
+            height: 100px;
+        }
+        table td.style_img_td{
+            width: 20%;
+        }
+        #style_img{
+            width:180px;
+            height:180px;
+        }
+        table td.spacetd{
+            height: 50px;
+        }
+        table td.col_name{
+           text-align: right;
+        }
+        /*款式信息表格----------end*/
+
+        /*工序分组展示----------start*/
+        .top_grpname{
+            font-size: 14px;
+            font-weight: bold; 
+        }
+        .grpname_txt{
+            width: 70px;
+            text-align: center;
+            padding: 8px 0px;
+        }
+        .bottom_img{
+            width:35px;
+            height:40px; 
+            position: relative;
+        }
+        .bottom_img>.img_sanjiao{
+            position:relative;
+            width: 0;
+            height: 0;
+            border-width:35px;
+            border-style: solid;
+            border-color:#666666 transparent transparent;
+        }
+        .bottom_img>.img_sanjiao:after{
+            content: "";
+            position: absolute;
+            top: -34px;
+            left: -33px;
+            border-width:33px;
+            border-style: solid;
+            border-color:white transparent transparent;
+        }
+        .bottom_img>.group_num{
+            text-align: center;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 70px; 
+        }
+        .style_steps{
+            width: 100%;
+            display: -webkit-box;
+            -webkit-box-orient: horizontal;
+        }
+        .style_steps>div{
+            -webkit-box-flex: 1;
+        }
+        div.step_item{
+            font-size: 10px;
+        }
+        .step_item>.step_top{
+            width: 70px;
+            height: 40px;
+            position: relative;
+        }
+        .step_item>.step_top>.top_line{
+            width: 35px;
+            height:34px;
+            border-right: solid 1px #666666;
+        }
+        .step_item>.step_top>.top_jt{
+            width: 1px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #666666 transparent transparent transparent;
+            left: 30px;
+            position: absolute;
+        } 
+        .step_bottom{
+            display: -webkit-box;
+        }
+        .step_bottom>.left_img{
+            width: 50px;
+            padding-left:15px;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+        }
+        .step_bottom>.left_img>.squar{
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            border:solid 1px #666666;
+            text-align: center;
+            line-height: 40px; 
+        }
+        .step_bottom>.left_img>.top_line{
+            width: 20px;
+            -webkit-box-flex: 1;
+            border-right: solid 1px #666666;
+        }
+        .right_txt{
+            width:130px;
+        }
+        .right_txt>.stepsj>span{
+            color: red;
+        }
+        .right_txt>.stepjq>span{
+            color: darkgreen;
+        }
+        /*工序分组展示----------end*/
+
+        /*设备需求表-----------start*/
+        .style_other{
+            position: absolute;
+            left: 20px;
+            top: 1000px;
+        }
+        #sbxq_table{
+            width: 1000px;
+        }
+        div.sbxq_title{
+            width: 100%;
+            text-align: center;
+            height: 30px;
+            line-height: 30px;
+            background-color: #F3F3F3;
+        }
+        table.sbxq{
+            width: 100%;
+            border-top: 1px solid #999;
+            border-left: 1px solid #999;
+            border-spacing: 0;
+            font-size: 12px;
+        }
+        table.sbxq th{
+            padding: 10px 30px;
+            border-bottom: 1px solid #999; 
+            border-right: 1px solid #999;
+        }
+        table.sbxq td{
+            padding: 5px 30px;
+            border-bottom: 1px solid #999; 
+            border-right: 1px solid #999;
+        }
+        /*设备需求表-----------end*/ 
+        .page_menu{
+            position: absolute;
+            right: 200px;
+            top: 30px;
+        }
+        div.print_btn{
+            width: 100px;
+            height: 30px;
+            padding-left: 25px;
+            background-image: url(img/print.svg);
+            background-size: 20px 20px;
+            background-position: left center;
+            background-repeat: no-repeat;
+            line-height: 30px;
+            font-size: 14px;
+            color: #666666;
+            cursor: pointer;
+        }
+        div.print_btn:hover{
+            color:#000000;
+            cursor: pointer;
+            background-image: url(img/print_active.svg);
+        }
+        .styleinfo .table_input{
+            width: 80px;
+            border: solid 1px #666666;
+            font-size: 16px;
+        }
+        .styleinfo .table_input.print{
+            border-width: 0px; 
+        }
+        .device_type_cell{
+            width: 80px;
+        }
+    </style>
+</head>
+<body>
+<div class="main_content">
+    <div id="chart_content" class="chartcontentsty">
+        <div class="head_title">款式流程分析图</div>
+        <div class="style_content">
+            <table class="styleinfo">
+                <tr>
+                    <td colspan="8"  class="spacetd"></td>
+                    <td rowspan="4" class="style_img_td">
+                        <img id="style_img" src="img/nostyleimg.jpg"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col_name">生产班组：</td>
+                    <td  id="scbz"><input id="scbz_input" type="text" class="table_input"/></td>
+                    <td class="col_name">实际人数：</td>
+                    <td id="rs"><input id="rs_input" type="text" class="table_input" onchange="renshuchange()"/></td>
+                    <td class="col_name">分单数：</td>
+                    <td id="fds"><input id="fds_input" type="text" class="table_input"/></td>
+                    <td class="col_name">台产：</td>
+                    <td id="tc"><input id="tc_input" type="text" class="table_input"  onchange="taichanchange()"/></td>
+                </tr>
+                <tr>
+                    <td class="col_name">款式编号：</td>
+                    <td id="ksbh"></td>
+                    <td class="col_name">款式类型：</td>
+                    <td id="kslx"></td>
+                    <td class="col_name">GST工时：</td>
+                    <td id="gstgs"></td>
+                    <td class="col_name">节拍时间：</td>
+                    <td  id="jpsj"></td>
+                </tr>
+                <tr><td colspan="8" class="spacetd"></td></tr>
+            </table>
+        </div>
+        <div id="style_steps" class="style_steps"></div>
+        <div class="style_other">
+            <div id="sbxq_table">
+                <div class="sbxq_title">设备需求表</div>
+                <table class="sbxq">
+                    <thead>
+                        <th class="device_type_cell">衣车种类</th>
+                        <th>分配工时(m)</th>
+                        <th>理论台数(台)</th>
+                        <th>修正后台数(台)</th>
+                        <th>现有台数(台)</th>
+                        <th>差异台数(台)</th>
+                        <th>需求时间</th>
+                        <th>实际到位时间</th>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="page_menu">
+            <div class="print_btn" onclick="print_report()">打印</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="js/jquery-1.10.2.js"></script> 
+<script type="text/javascript" src="js/gst_dal.js"></script> 
+<script type="text/javascript" src="js/index.js"></script> 
