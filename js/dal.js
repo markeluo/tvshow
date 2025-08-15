@@ -185,7 +185,7 @@
      * @param {*} _call 回调函数
      */
     u.GetCutTodayTotal=function(_lineCode,_call){
-        u._get("TV/cut/todaytotal/"+_lineCode,null,function(_rtl){
+        u._get("TVCut/todaytotal/"+_lineCode,null,function(_rtl){
             _call(_rtl);
         });
     }
@@ -196,7 +196,7 @@
      * @param {*} _call 回调函数
      */
      u.GetCutWeekTotal=function(_lineCode,_call){
-        u._get("TV/cut/weektotal/"+_lineCode,null,function(_rtl){
+        u._get("TVCut/weektotal/"+_lineCode,null,function(_rtl){
             _call(_rtl);
         });
      }
@@ -207,21 +207,77 @@
      * @param {*} _call 回调函数
      */
       u.GetCutDayHistory=function(_lineCode,_call){
-        u._get("TV/cut/dayhistory/"+_lineCode,null,function(_rtl){
+        u._get("TVCut/dayhistory/"+_lineCode,null,function(_rtl){
             _call(_rtl);
         });
       }
 
-      /**
-       * 13.获取每月统计历史数据
-       * @param {*} _lineCode 
-       * @param {*} _call 
-       */
-       u.GetCutMonthHistory=function(_lineCode,_call){
-        u._get("TV/cut/monthhistory/"+_lineCode,null,function(_rtl){
+    /**
+     * 13.获取每月统计历史数据
+     * @param {*} _lineCode 
+     * @param {*} _call 
+     */
+    u.GetCutMonthHistory=function(_lineCode,_call){
+        u._get("TVCut/monthhistory/"+_lineCode,null,function(_rtl){
             _call(_rtl);
         });
-       }
+    }
+ 
+    /**
+     * 14.获取客查今日统计数据
+     * @param {*} _lineCode 
+     * @param {*} _call 
+     */
+    u.GetPackTodayTotal=function(_lineCode,_call){
+        if(_lineCode && _lineCode!=''){}else{
+            _lineCode="CJMAF01";
+        }
+        u._get("TVPackQA/todaytotal/"+_lineCode,null,function(_rtl){
+            _call(_rtl);
+        });
+    }
+
+     /**
+     * 15.获取今日款式查验数据
+     * @param {*} _lineCode 
+     * @param {*} _call 
+     */
+      u.GetPackTodayStyle=function(_lineCode,_call){
+        if(_lineCode && _lineCode!=''){}else{
+            _lineCode="CJMAF01";
+        }
+        u._get("TVPackQA/todaystyle/"+_lineCode,null,function(_rtl){
+            _call(_rtl);
+        });
+    }
+
+    /**
+     * 16.获取疵点问题TopN数据
+     * @param {*} _lineCode 
+     * @param {*} _call 
+     */
+     u.GetPackTopNDict=function(_lineCode,_call){
+        if(_lineCode && _lineCode!=''){}else{
+            _lineCode="CJMAF01";
+        }
+        u._get("TVPackQA/topndictitem/"+_lineCode,null,function(_rtl){
+            _call(_rtl);
+        });
+    }
+
+     /**
+     * 17.获取疵点率历史数据
+     * @param {*} _lineCode 
+     * @param {*} _call 
+     */
+    u.GetPackDictRate=function(_lineCode,_call){
+        if(_lineCode && _lineCode!=''){}else{
+            _lineCode="CJMAF01";
+        }
+        u._get("TVPackQA/dictrate/"+_lineCode,null,function(_rtl){
+            _call(_rtl);
+        });
+    }
 
     window.DAL= u;
   })(window);
